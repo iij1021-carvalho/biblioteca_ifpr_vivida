@@ -76,3 +76,26 @@ func (emprestado Emprestado) EditarLivroEmprestado() (Emprestado, error) {
 	transacao.Commit()
 	return emprestado, nil
 }
+
+func (emprestado Emprestado) ExcluirLivroEmprestado() (Emprestado, error) {
+	var conexao_geral = conexao.Conexao_DataBase()
+	var transacao, err = conexao_geral.Begin()
+
+	if err != nil {
+		transacao.Rollback()
+		return emprestado, err
+	}
+
+	var _, erro = transacao.Exec(
+		`DELETE FROM EMPRESTADO 
+		  WHERE ID_EMPRESTADO = ?   `,
+		emprestado.ID_EMPRESTADO)
+
+	if erro != nil {
+		transacao.Rollback()
+		return emprestado, erro
+	}
+
+	transacao.Commit()
+	return emprestado, nil
+}

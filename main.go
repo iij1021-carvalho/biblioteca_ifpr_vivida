@@ -32,8 +32,12 @@ func main() {
 	api.Post("/registrarusuario", servicos.RegistrarUsuario)
 	api.Put("/editarusuario", servicos.EditarUsuario)
 	api.Post("/deletarusuario", servicos.ExcluirUsuario)
-	api.Get("/retornadadosusuario", servicos.RetornaTodosUsuarios)
 	api.Post("/efectuarentradausuario", servicos.EfectuarEntradaUsuario)
+	api.Get("/retornadadosusuario", servicos.RetornaTodosUsuarios)
+
+	api.Post("/registrarlivroemprestado", servicos.RegistrarLivroEmprestado)
+	api.Put("/editarlivroemprestado", servicos.EditarLivroEmprestado)
+	api.Post("/deletarlivroemprestado", servicos.ExcluirLivroEmprestado)
 
 	var ip = GetIpMaquina()
 	var erro = api.Listen(ip.String() + ":3000")
