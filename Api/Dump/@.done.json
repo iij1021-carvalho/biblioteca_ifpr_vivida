@@ -1,0 +1,29 @@
+{
+    "end": "2025-08-13 14:58:21",
+    "dataBytes": 805,
+    "tableDataBytes": {
+        "IFPR_BIBLIOTECA": {
+            "BOOKS": 592,
+            "USUARIO": 53,
+            "EMPRESTADO": 160,
+            "CATEGORIA_LIVRO": 0,
+            "LOCALIZACAO_LIVRO": 0
+        }
+    },
+    "tableRows": {
+        "IFPR_BIBLIOTECA": {
+            "BOOKS": 10,
+            "USUARIO": 1,
+            "EMPRESTADO": 4,
+            "CATEGORIA_LIVRO": 0,
+            "LOCALIZACAO_LIVRO": 0
+        }
+    },
+    "chunkFileBytes": {
+        "IFPR_BIBLIOTECA@BOOKS@@0.tsv.zst": 592,
+        "IFPR_BIBLIOTECA@EMPRESTADO@@0.tsv.zst": 160,
+        "IFPR_BIBLIOTECA@CATEGORIA_LIVRO@@0.tsv.zst": 0,
+        "IFPR_BIBLIOTECA@USUARIO@@0.tsv.zst": 53,
+        "IFPR_BIBLIOTECA@LOCALIZACAO_LIVRO@@0.tsv.zst": 0
+    }
+}

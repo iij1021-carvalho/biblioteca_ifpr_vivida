@@ -20,7 +20,7 @@ func GetIpMaquina() net.IP {
 
 	endereco := con.LocalAddr().(*net.TCPAddr)
 	return endereco.IP
-}
+} 
 
 func main() {
 	api := fiber.New()

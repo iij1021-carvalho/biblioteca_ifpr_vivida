@@ -1,0 +1,32 @@
+{
+    "options": {
+        "schema": "IFPR_BIBLIOTECA",
+        "table": "USUARIO",
+        "columns": [
+            "ID_USUARIO",
+            "NOME_USUARIO",
+            "SENHA_USUARIO",
+            "EMAIL_USUARIO",
+            "DATANASCIMENTO_USUARIO",
+            "IDADE_USUARIO",
+            "ENDERECO_USUARIO"
+        ],
+        "defaultCharacterSet": "utf8mb4",
+        "fieldsTerminatedBy": "\t",
+        "fieldsEnclosedBy": "",
+        "fieldsOptionallyEnclosed": false,
+        "fieldsEscapedBy": "\\",
+        "linesTerminatedBy": "\n"
+    },
+    "triggers": [],
+    "includesData": true,
+    "includesDdl": true,
+    "extension": "tsv.zst",
+    "chunking": true,
+    "compression": "zstd",
+    "primaryIndex": [
+        "ID_USUARIO"
+    ],
+    "partitions": [],
+    "basenames": {}
+}

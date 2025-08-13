@@ -1,0 +1,28 @@
+{
+    "options": {
+        "schema": "IFPR_BIBLIOTECA",
+        "table": "CATEGORIA_LIVRO",
+        "columns": [
+            "ID_CATEGORIA_LIVRO",
+            "DESCRICAO_CATEGORIA",
+            "ATIVO_CATEGORIA"
+        ],
+        "defaultCharacterSet": "utf8mb4",
+        "fieldsTerminatedBy": "\t",
+        "fieldsEnclosedBy": "",
+        "fieldsOptionallyEnclosed": false,
+        "fieldsEscapedBy": "\\",
+        "linesTerminatedBy": "\n"
+    },
+    "triggers": [],
+    "includesData": true,
+    "includesDdl": true,
+    "extension": "tsv.zst",
+    "chunking": true,
+    "compression": "zstd",
+    "primaryIndex": [
+        "ID_CATEGORIA_LIVRO"
+    ],
+    "partitions": [],
+    "basenames": {}
+}
