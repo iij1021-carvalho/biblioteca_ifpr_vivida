@@ -20,7 +20,7 @@ func GetIpMaquina() net.IP {
 
 	endereco := con.LocalAddr().(*net.TCPAddr)
 	return endereco.IP
-} 
+}
 
 func main() {
 	api := fiber.New()
@@ -38,6 +38,11 @@ func main() {
 	api.Post("/registrarlivroemprestado", servicos.RegistrarLivroEmprestado)
 	api.Put("/editarlivroemprestado", servicos.EditarLivroEmprestado)
 	api.Post("/deletarlivroemprestado", servicos.ExcluirLivroEmprestado)
+
+	api.Post("/registrarcategoria", servicos.RegistrarCategoria)
+	api.Put("/editarcategoria", servicos.EditarCategoria)
+	api.Post("/deletarcategoria", servicos.ExcluirCategoria)
+	api.Get("/retornadadoscategoria", servicos.RetornaDadosCategoria)
 
 	var ip = GetIpMaquina()
 	var erro = api.Listen(ip.String() + ":3000")

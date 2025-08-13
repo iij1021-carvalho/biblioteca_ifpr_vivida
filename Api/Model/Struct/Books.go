@@ -5,13 +5,15 @@ import (
 )
 
 type Books struct {
-	ID          int    `json:"ID"`
-	TITULLO     string `json:"TITULO"`
-	AUTOR       string `json:"AUTOR"`
-	ANO         string `json:"ANO"`
-	QRCODE      string `json:"QRCODE"`
-	LOCALIZACAO string `json:"LOCALIZACAO"`
-	STATUS      string `json:"STATUS"`
+	ID             int    `json:"ID"`
+	TITULLO        string `json:"TITULO"`
+	AUTOR          string `json:"AUTOR"`
+	ANO            string `json:"ANO"`
+	QRCODE         string `json:"QRCODE"`
+	STATUS         string `json:"STATUS"`
+	ID_CATEGORIA   int    `json:"ID_CATEGORIA"`
+	ID_LOCALIZACAO int    `json:"ID_LOCALIZACAO"`
+	PASTA_CAPA     string `json:"PASTA_CAPA"`
 }
 
 func (book Books) RegistrarLivro() (Books, error) {
@@ -23,16 +25,17 @@ func (book Books) RegistrarLivro() (Books, error) {
 		return book, erro
 	}
 
-	var resultado, err = transacao.Exec(
-		"	 INSERT INTO BOOKS  							   "+
-			"(TITULO, AUTOR, ANO, QRCODE, LOCALIZACAO, STATUS) "+
-			" VALUES(?, ?, ?, ?, ?, ?)                         ",
+	var resultado, err = transacao.Exec(`
+			 INSERT INTO BOOKS (TITULO, AUTOR, ANO, QRCODE, STATUS)              
+			                    VALUES(?, ?, ?, ?, ?, ?, ?, ?)`,
 		book.TITULLO,
 		book.AUTOR,
 		book.ANO,
 		book.QRCODE,
-		book.LOCALIZACAO,
-		book.STATUS)
+		book.STATUS,
+		book.ID_CATEGORIA,
+		book.ID_LOCALIZACAO,
+		book.PASTA_CAPA)
 
 	if err != nil {
 		transacao.Rollback()
@@ -61,20 +64,24 @@ func (book Books) EditarLivro() (Books, error) {
 		return book, errro
 	}
 
-	var resultado, erro = transacao.Exec(
-		"	  UPDATE BOOKS SET TITULO = ?, 		"+
-			"         		   AUTOR  = ?,	    "+
-			"         		   ANO    = ?, 		"+
-			"         		   QRCODE = ?,		"+
-			"         		   LOCALIZACAO = ?, "+
-			"         		   STATUS = ?       "+
-			" 			 WHERE ID = ?           ",
+	var resultado, erro = transacao.Exec(`
+		UPDATE BOOKS SET TITULO = ?, 		
+		        		 AUTOR  = ?,	   
+		        		 ANO    = ?, 		
+		        		 QRCODE = ?,		
+		        		 STATUS = ?,
+						 ID_CATEGORIA = ?,
+						 ID_LOCALIZACAO = ?,
+						 PASTA_CAPA = ?      
+				   WHERE ID =     ? `,
 		book.TITULLO,
 		book.AUTOR,
 		book.ANO,
 		book.QRCODE,
-		book.LOCALIZACAO,
 		book.STATUS,
+		book.ID_CATEGORIA,
+		book.ID_LOCALIZACAO,
+		book.PASTA_CAPA,
 		book.ID)
 
 	if erro != nil {
@@ -120,15 +127,17 @@ func (book Books) RetornaTodosLivros() ([]Books, error) {
 		return book_, err
 	}
 
-	var resultado, erro = transacao.Query(
-		"		SELECT ID,          " +
-			"	       TITULO,      " +
-			"	       AUTOR,       " +
-			"	       ANO,         " +
-			"	       QRCODE,      " +
-			"	       LOCALIZACAO, " +
-			"          STATUS       " +
-			"     FROM BOOKS 		")
+	var resultado, erro = transacao.Query(`
+		SELECT ID,          
+		       TITULO,      
+		       AUTOR,       
+		       ANO,         
+		       QRCODE,      
+	           STATUS, 
+			   ID_CATEGORIA,
+			   ID_LOCALIZACAO,
+			   PASTA_CAPA      
+	      FROM BOOKS `)
 
 	if erro != nil {
 		return book_, erro
@@ -137,7 +146,8 @@ func (book Books) RetornaTodosLivros() ([]Books, error) {
 	for resultado.Next() {
 		erro = resultado.Scan(
 			&book.ID, &book.TITULLO, &book.AUTOR,
-			&book.ANO, &book.QRCODE, &book.LOCALIZACAO, &book.STATUS)
+			&book.ANO, &book.QRCODE, &book.STATUS,
+			&book.ID_CATEGORIA, &book.ID_LOCALIZACAO, &book.PASTA_CAPA)
 
 		if erro != nil {
 			return book_, erro
