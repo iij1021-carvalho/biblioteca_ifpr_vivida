@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func GravarLocalizacao(c *fiber.Ctx) error {
+func RegistrarLocalizacao(c *fiber.Ctx) error {
 	var localizacao localizacao.Localizacao
 	var erro = c.BodyParser(&localizacao)
 

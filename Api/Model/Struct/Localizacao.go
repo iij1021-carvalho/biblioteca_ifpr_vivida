@@ -20,7 +20,7 @@ func (localizacao Localizacao) RegistrarLocalizacao() (Localizacao, error) {
 	}
 
 	var _, erro = transacao.Exec(`
-		INSERT INTO LOCALIZACAO (DESCRICAO_LOCALIZACAO,FOTO_LOCALIZACAO)
+		INSERT INTO LOCALIZACAO_LIVRO (DESCRICAO_LOCALIZACAO,FOTO_LOCALIZACAO)
 		VALUES(?,?)`, localizacao.DESCRICAO_LOCALIZACAO,
 		localizacao.FOTO_LOCALIZACAO)
 
@@ -43,7 +43,7 @@ func (localizacao Localizacao) EditarLocalizacao() (Localizacao, error) {
 	}
 
 	var _, erro = transacao.Exec(`
-		UPDATE LOCALIZACAO 
+		UPDATE LOCALIZACAO_LIVRO 
 		   SET DESCRICAO_LOCALIZACAO = ?,
 			   FOTO_LOCALIZACAO =      ?
 		 WHERE ID_LOCALIZACAO = ?	   `,
@@ -70,7 +70,7 @@ func (localizacao Localizacao) ExcluirLocalizacao() (Localizacao, error) {
 	}
 
 	var _, erro = transacao.Exec(`
-		DELETE FROM LOCALIZACAO
+		DELETE FROM LOCALIZACAO_LIVRO
 		 WHERE ID_LOCALIZACAO = ? 
 	`, localizacao.ID_LOCALIZACAO)
 
@@ -91,7 +91,7 @@ func (localizacao Localizacao) RetornaTodasLocalizacoesLivros() ([]Localizacao, 
 			SELECT ID_LOCALIZACAO,
 				   DESCRICAO_LOCALIZACAO,
 				   FOTO_LOCALIZACAO
-			 FROM LOCALIZACAO	   		
+			 FROM LOCALIZACAO_LIVRO	   		
 		`)
 
 	if erro != nil {

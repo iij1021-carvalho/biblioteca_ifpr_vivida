@@ -44,6 +44,11 @@ func main() {
 	api.Post("/deletarcategoria", servicos.ExcluirCategoria)
 	api.Get("/retornadadoscategoria", servicos.RetornaDadosCategoria)
 
+	api.Post("/registrarlocalizacao", servicos.RegistrarLocalizacao)
+	api.Put("/editarlocalizacao", servicos.EditarLocalizacao)
+	api.Post("/deletarlocalizacao", servicos.ExcluirLocalizacao)
+	api.Get("/retornadadoslocalizacao", servicos.RetornaDadosLocalizacao)
+
 	var ip = GetIpMaquina()
 	var erro = api.Listen(ip.String() + ":3000")
 
