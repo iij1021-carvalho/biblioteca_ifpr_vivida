@@ -60,7 +60,7 @@ fun EntradaUsuario() {
 
             Image(
                 modifier = Modifier.size(300.dp),
-                painter = painterResource(id = R.drawable.biblioteca), contentDescription = ""
+                painter = painterResource(id = R.drawable.ifprbiblio), contentDescription = ""
             )
 
             OutlinedTextField(
@@ -114,7 +114,7 @@ fun EntradaUsuario() {
 
             Text(
                 modifier = Modifier
-                    .clickable() {
+                    .clickable {
 
                     },
                 text = "Esqueceu a senha?",
@@ -129,7 +129,7 @@ fun EntradaUsuario() {
             Row {
                 Text(
                     modifier = Modifier
-                        .clickable() {
+                        .clickable {
 
                         },
                     text = "Você ainda não possui uma conta?"

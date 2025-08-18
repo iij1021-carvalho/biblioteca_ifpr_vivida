@@ -77,7 +77,7 @@ func (emprestado Emprestado) EditarLivroEmprestado() (Emprestado, error) {
 	return emprestado, nil
 }
 
-func (emprestado Emprestado) ExcluirLivroEmprestado() (Emprestado, error) {
+func (emprestado Emprestado) DevolverLivroEmprestado() (Emprestado, error) {
 	var conexao_geral = conexao.Conexao_DataBase()
 	var transacao, err = conexao_geral.Begin()
 
@@ -87,8 +87,18 @@ func (emprestado Emprestado) ExcluirLivroEmprestado() (Emprestado, error) {
 	}
 
 	var _, erro = transacao.Exec(
-		`DELETE FROM EMPRESTADO 
-		  WHERE ID_EMPRESTADO = ?   `,
+		`UPDATE EMPRESTADO 
+			SET ID_LIVRO = ?,
+				ID_USUARIO = ?,
+				DATA_EMPRESTADO = ?,
+				DATA_DEVOLUCAO_EMPRESTADO = ?,
+				STATUS_EMPRESTIMO = ?
+		  WHERE	ID_EMPRESTADO = ?`,
+		emprestado.ID_LIVRO,
+		emprestado.ID_USUARIO,
+		emprestado.DATA_EMPRESTADO,
+		emprestado.DATA_DEVOLUCAO_EMPRESTADO,
+		emprestado.STATUS_EMPRESTIMO,
 		emprestado.ID_EMPRESTADO)
 
 	if erro != nil {

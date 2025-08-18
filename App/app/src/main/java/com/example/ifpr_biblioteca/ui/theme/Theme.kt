@@ -51,7 +51,7 @@ fun Ifpr_bibliotecaTheme(
     }
 
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = lightColorScheme(),
         typography = Typography,
         content = content
     )

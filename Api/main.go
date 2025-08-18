@@ -24,6 +24,8 @@ func GetIpMaquina() net.IP {
 
 func main() {
 	api := fiber.New()
+
+	api.Get("/", servicos.CriarTabelas)
 	api.Post("/registrarlivro", servicos.GravarLivro)
 	api.Put("/editarlivro", servicos.EditarLivro)
 	api.Post("/deletarlivro", servicos.ExcluirLivro)
@@ -37,7 +39,7 @@ func main() {
 
 	api.Post("/registrarlivroemprestado", servicos.RegistrarLivroEmprestado)
 	api.Put("/editarlivroemprestado", servicos.EditarLivroEmprestado)
-	api.Post("/deletarlivroemprestado", servicos.ExcluirLivroEmprestado)
+	api.Post("/deletarlivroemprestado", servicos.DevolverLivroEmprestado)
 
 	api.Post("/registrarcategoria", servicos.RegistrarCategoria)
 	api.Put("/editarcategoria", servicos.EditarCategoria)

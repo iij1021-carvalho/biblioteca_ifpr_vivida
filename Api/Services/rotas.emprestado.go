@@ -66,7 +66,7 @@ func EditarLivroEmprestado(c *fiber.Ctx) error {
 	})
 }
 
-func ExcluirLivroEmprestado(c *fiber.Ctx) error {
+func DevolverLivroEmprestado(c *fiber.Ctx) error {
 	var emprestado emprestado.Emprestado
 
 	var err = c.BodyParser(&emprestado)
@@ -79,7 +79,7 @@ func ExcluirLivroEmprestado(c *fiber.Ctx) error {
 		})
 	}
 
-	var _, erro = emprestado.ExcluirLivroEmprestado()
+	var _, erro = emprestado.DevolverLivroEmprestado()
 
 	if erro != nil {
 		return c.Status(400).JSON(fiber.Map{
