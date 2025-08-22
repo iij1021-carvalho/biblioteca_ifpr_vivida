@@ -59,7 +59,7 @@ fun EntradaUsuario() {
         ) {
 
             Image(
-                modifier = Modifier.size(300.dp),
+                modifier = Modifier.size(380.dp),
                 painter = painterResource(id = R.drawable.ifprbiblio), contentDescription = ""
             )
 

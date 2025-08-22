@@ -36,7 +36,7 @@ fun RenderizaMenu() {
     IconButton(
         modifier = Modifier
             .padding(top = 15.dp)
-            .width(70.dp),
+            .width(50.dp),
         onClick = { expanded = !expanded }) {
         Icon(Icons.Default.Menu, contentDescription = "Mais opções")
     }

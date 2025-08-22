@@ -26,8 +26,8 @@ func (book Books) RegistrarLivro() (Books, error) {
 	}
 
 	var resultado, err = transacao.Exec(`
-			 INSERT INTO BOOKS (TITULO, AUTOR, ANO, QRCODE, STATUS)              
-			                    VALUES(?, ?, ?, ?, ?, ?, ?, ?)`,
+			 INSERT INTO BOOKS (TITULO, AUTOR, ANO, QRCODE, STATUS,ID_CATEGORIA,ID_LOCALIZACAO,PASTA_CAPA)              
+			                   VALUES(?,?,?,?,?,?,?,?)`,
 		book.TITULLO,
 		book.AUTOR,
 		book.ANO,
@@ -85,16 +85,19 @@ func (book Books) EditarLivro() (Books, error) {
 		book.ID)
 
 	if erro != nil {
+		transacao.Rollback()
 		return book, erro
 	}
 
 	linhas, erro := resultado.RowsAffected()
 
 	if erro != nil {
+		transacao.Rollback()
 		return book, erro
 	}
 
 	if linhas > 0 {
+		transacao.Commit()
 		return book, nil
 	}
 
@@ -106,6 +109,7 @@ func (book Books) DeletarLivro() (Books, error) {
 	var transacao, err = conexaogeral.Begin()
 
 	if err != nil {
+		transacao.Rollback()
 		return book, err
 	}
 
@@ -113,8 +117,11 @@ func (book Books) DeletarLivro() (Books, error) {
 		"DELETE FROM BOOKS WHERE ID = ?", book.ID)
 
 	if erro != nil {
+		transacao.Rollback()
 		return book, erro
 	}
+
+	transacao.Commit()
 	return book, nil
 }
 

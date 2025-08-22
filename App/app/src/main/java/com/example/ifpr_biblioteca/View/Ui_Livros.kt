@@ -60,7 +60,7 @@ fun ListaLivros() {
                     RenderizaMenu()
                     OutlinedTextField(
                         modifier = Modifier
-                            .width(300.dp),
+                            .width(320.dp),
                         value = texto,
                         leadingIcon = {
                             Icon(Icons.Default.Search, contentDescription = "")
