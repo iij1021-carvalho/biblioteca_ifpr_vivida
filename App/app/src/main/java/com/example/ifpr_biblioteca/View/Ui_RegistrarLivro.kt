@@ -1,7 +1,6 @@
 package com.example.ifpr_biblioteca.View
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -13,30 +12,33 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.ifpr_biblioteca.Data.Books
-import com.example.ifpr_biblioteca.Model.Viewmodel.ViewModel_Usuario
+import com.example.ifpr_biblioteca.Data.Dt_Livro
+import com.example.ifpr_biblioteca.Data.LivroOperacao.Novo
+import com.example.ifpr_biblioteca.Data.LivroUiState
+import com.example.ifpr_biblioteca.Model.Viewmodel.ViewModel_Livro
 import com.example.ifpr_biblioteca.R
-import kotlinx.coroutines.launch
 
 @SuppressLint("ResourceAsColor")
 @Composable
-fun RegistrarLivro(navController: NavController, viewmodelUsuario: ViewModel_Usuario) {
-    val corountinescope = rememberCoroutineScope()
+fun RegistrarLivro(navController: NavController, viewmodelivro: ViewModel_Livro) {
+    val uiState by viewmodelivro.uiState.collectAsState()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color.White)
-
     ) {
         Column(
             modifier = Modifier
@@ -133,29 +135,45 @@ fun RegistrarLivro(navController: NavController, viewmodelUsuario: ViewModel_Usu
                 .padding(bottom = 25.dp)
                 .width(320.dp),
             onClick = {
-                corountinescope.launch {
-                    val booksList =
-                        Books(
-                            ID = 0,
-                            TITULO = "Clean Code",
-                            AUTOR = "Robert C. Martin",
-                            ANO = "2008",
-                            QRCODE = "QR123456",
-                            STATUS = "D", // D = Disponível, E = Emprestado, etc
-                            ID_CATEGORIA = 10,
-                            ID_LOCALIZACAO = 5,
-                            PASTA_CAPA = "images/clean_code.jpg"
-                        )
-
-                    if (viewmodelUsuario.OperacoesLivro(booksList, "N")) {
-                        Log.d("dados", "Dados inseridos com sucesso")
-                    } else {
-                        Log.d("falha", "falha ao registrar")
-                    }
-                }
+                val booksList =
+                    Dt_Livro(
+                        ID = 0,
+                        TITULO = "Clean Code",
+                        AUTOR = "Robert C. Martin",
+                        ANO = "2008",
+                        QRCODE = "QR123456",
+                        STATUS = "D", // D = Disponível, E = Emprestado, etc
+                        ID_CATEGORIA = 10,
+                        ID_LOCALIZACAO = 5,
+                        PASTA_CAPA = "images/clean_code.jpg"
+                    )
+                viewmodelivro.executarOperacao(Novo(booksList))
             }
         ) {
-            Text("Cadastrar Livro:")
+            if (uiState is LivroUiState.Loading) {
+                CircularProgressIndicator(color = Color.White, strokeWidth = 2.dp)
+            } else {
+                Text("Cadastrar Livro:")
+            }
+        }
+
+        when (uiState) {
+            is LivroUiState.Sucess -> {
+                Text("✅ ${(uiState as LivroUiState.Sucess).message}")
+            }
+
+            is LivroUiState.Erro -> {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                ) {
+                    Text("❌ ${(uiState as LivroUiState.Erro).erro}")
+                }
+            }
+
+            else -> {
+
+            }
         }
     }
 }

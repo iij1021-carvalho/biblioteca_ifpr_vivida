@@ -19,10 +19,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,13 +36,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.ifpr_biblioteca.Data.Dt_Usuario
+import com.example.ifpr_biblioteca.Data.UsuarioOperacao
+import com.example.ifpr_biblioteca.Data.UsuarioUiState
+import com.example.ifpr_biblioteca.Model.Viewmodel.ViewModelUsuario
 import com.example.ifpr_biblioteca.R
 
-@Preview
+
 @Composable
-fun EntradaUsuario() {
+fun EntradaUsuario(navController: NavController, viewModelUsuario: ViewModelUsuario) {
+    val uiState by viewModelUsuario.uiState.collectAsState()
     var usuario by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
 
@@ -107,9 +114,30 @@ fun EntradaUsuario() {
             Button(
                 modifier = Modifier
                     .width(330.dp),
-                onClick = {}
+                onClick = {
+                    viewModelUsuario.executarOperacao(
+                        UsuarioOperacao.Entrar(
+                            Dt_Usuario(
+                                NOME_USUARIO = usuario, SENHA_USUARIO = senha
+                            )
+                        )
+                    )
+                }
             ) {
+                if (uiState is UsuarioUiState.Loading) {
+                    CircularProgressIndicator(color = Color.White, strokeWidth = 2.dp)
+                }
                 Text("Conectar-se")
+            }
+
+            when (uiState) {
+                is UsuarioUiState.Sucess -> {
+                    Text("✅ ${(uiState as UsuarioUiState.Sucess).message}")
+                    navController.navigate("ListaLivros")
+                }
+
+                is UsuarioUiState.Erro -> Text("✅ ${(uiState as UsuarioUiState.Erro).erro}")
+                else -> {}
             }
 
             Text(
@@ -128,10 +156,6 @@ fun EntradaUsuario() {
 
             Row {
                 Text(
-                    modifier = Modifier
-                        .clickable {
-
-                        },
                     text = "Você ainda não possui uma conta?"
                 )
 
@@ -139,7 +163,7 @@ fun EntradaUsuario() {
                     modifier = Modifier
                         .padding(start = 5.dp)
                         .clickable() {
-
+                            navController.navigate("RegistrarUsuario")
                         },
                     text = "Crie uma agora",
                     fontWeight = FontWeight.Bold,

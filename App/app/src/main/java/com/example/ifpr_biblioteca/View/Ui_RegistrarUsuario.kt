@@ -20,16 +20,30 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.ifpr_biblioteca.Data.Dt_Usuario
+import com.example.ifpr_biblioteca.Data.UsuarioOperacao
+import com.example.ifpr_biblioteca.Data.UsuarioUiState
+import com.example.ifpr_biblioteca.Model.Viewmodel.ViewModelUsuario
 
 @SuppressLint("ResourceAsColor")
-@Preview
 @Composable
-fun RegistrarUsuario() {
+fun RegistrarUsuario(navController: NavController, viewModelUsuario: ViewModelUsuario) {
+    val uiState by viewModelUsuario.uiState.collectAsState()
+    var usuario by remember { mutableStateOf("") }
+    var senha by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var data_nascimento by remember { mutableStateOf("") }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -45,13 +59,15 @@ fun RegistrarUsuario() {
             OutlinedTextField(
                 modifier = Modifier
                     .width(370.dp),
-                value = "",
+                value = usuario,
                 leadingIcon = {
                     Icon(
                         Icons.Default.Person, contentDescription = ""
                     )
                 },
-                onValueChange = {},
+                onValueChange = {
+                    usuario = it
+                },
                 label = { Text("Usuario:") }
             )
 
@@ -63,11 +79,13 @@ fun RegistrarUsuario() {
             OutlinedTextField(
                 modifier = Modifier
                     .width(370.dp),
-                value = "",
+                value = senha,
                 leadingIcon = {
                     Icon(Icons.Default.Lock, contentDescription = "")
                 },
-                onValueChange = {},
+                onValueChange = {
+                    senha = it
+                },
                 label = { Text("Senha:") }
             )
 
@@ -79,11 +97,13 @@ fun RegistrarUsuario() {
             OutlinedTextField(
                 modifier = Modifier
                     .width(370.dp),
-                value = "",
+                value = email,
                 leadingIcon = {
                     Icon(Icons.Default.Email, contentDescription = "")
                 },
-                onValueChange = {},
+                onValueChange = {
+                    email = it
+                },
                 label = { Text("Email:") }
             )
 
@@ -95,12 +115,12 @@ fun RegistrarUsuario() {
             OutlinedTextField(
                 modifier = Modifier
                     .width(370.dp),
-                value = "",
+                value = data_nascimento,
                 leadingIcon = {
                     Icon(Icons.Default.DateRange, contentDescription = "")
                 },
                 onValueChange = {
-
+                    data_nascimento = it
                 },
                 label = { Text("Data Nascimento:") }
             )
@@ -121,8 +141,27 @@ fun RegistrarUsuario() {
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 25.dp)
                 .width(320.dp),
-            onClick = {}
+            onClick = {
+                viewModelUsuario.executarOperacao(
+                    UsuarioOperacao.Novo(
+                        Dt_Usuario(
+                            NOME_USUARIO = usuario, SENHA_USUARIO = senha, EMAIL_USUARIO = email, DATANASCIMENTO_USUARIO = data_nascimento
+                        )
+                    )
+                )
+            }
         ) {
+            when (uiState) {
+                is UsuarioUiState.Sucess -> {
+                    Text("✅ ${(uiState as UsuarioUiState.Sucess).message}")
+                    navController.navigate("login")
+                }
+
+                is UsuarioUiState.Erro -> Text("✅ ${(uiState as UsuarioUiState.Erro).erro}")
+                else -> {
+
+                }
+            }
             Text("Registrar usuario:")
         }
     }

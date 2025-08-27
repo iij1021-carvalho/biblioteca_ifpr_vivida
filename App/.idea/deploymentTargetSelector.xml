@@ -11,13 +11,13 @@
       <SelectionState runConfigName="RegistrarUsuario">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="ListaLivros">
+      <SelectionState runConfigName="ReservarLivro">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="ListaCategoriaLivros">
+      <SelectionState runConfigName="RenderizaMenu">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="InventarioBiblioteca">
+      <SelectionState runConfigName="MainActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
