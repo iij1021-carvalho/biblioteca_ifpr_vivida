@@ -4,8 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ifpr_biblioteca.Data.CategoriaOperacao
 import com.example.ifpr_biblioteca.Data.CategoriaUiState
-import com.example.ifpr_biblioteca.Data.Dt_Categoria
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
