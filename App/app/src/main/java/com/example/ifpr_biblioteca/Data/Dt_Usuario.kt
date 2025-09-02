@@ -7,10 +7,7 @@ data class Dt_Usuario(
     val ID_USUARIO: Int = 0,
     val NOME_USUARIO: String = "",
     val SENHA_USUARIO: String = "",
-    val EMAIL_USUARIO: String = "",
-    val DATANASCIMENTO_USUARIO: String = "",
-    val IDADE_USUARIO: Int = 0,
-    val ENDERECO_USUARIO: String = ""
+    val EMAIL_USUARIO: String = ""
 )
 
 @Serializable

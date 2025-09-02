@@ -27,7 +27,8 @@ func main() {
 	api.Post("/registrarlivro", servicos.GravarLivro)
 	api.Put("/editarlivro", servicos.EditarLivro)
 	api.Post("/deletarlivro", servicos.ExcluirLivro)
-	api.Get("/retornalivros", servicos.RetornaListaLivros)
+	api.Post("/retornalivros", servicos.RetornaListaLivros)
+	api.Get("/atualizarregistros", servicos.AtualizarRegistros)
 
 	api.Post("/registrarusuario", servicos.RegistrarUsuario)
 	api.Put("/editarusuario", servicos.EditarUsuario)

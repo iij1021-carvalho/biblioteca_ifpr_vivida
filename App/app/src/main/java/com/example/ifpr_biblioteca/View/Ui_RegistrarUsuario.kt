@@ -111,24 +111,6 @@ fun RegistrarUsuario(navController: NavController, viewModelUsuario: ViewModelUs
                 modifier = Modifier
                     .height(5.dp)
             )
-
-            OutlinedTextField(
-                modifier = Modifier
-                    .width(370.dp),
-                value = data_nascimento,
-                leadingIcon = {
-                    Icon(Icons.Default.DateRange, contentDescription = "")
-                },
-                onValueChange = {
-                    data_nascimento = it
-                },
-                label = { Text("Data Nascimento:") }
-            )
-
-            Spacer(
-                modifier = Modifier
-                    .height(5.dp)
-            )
         }
     }
 
@@ -145,7 +127,7 @@ fun RegistrarUsuario(navController: NavController, viewModelUsuario: ViewModelUs
                 viewModelUsuario.executarOperacao(
                     UsuarioOperacao.Novo(
                         Dt_Usuario(
-                            NOME_USUARIO = usuario, SENHA_USUARIO = senha, EMAIL_USUARIO = email, DATANASCIMENTO_USUARIO = data_nascimento
+                            NOME_USUARIO = usuario, SENHA_USUARIO = senha, EMAIL_USUARIO = email
                         )
                     )
                 )

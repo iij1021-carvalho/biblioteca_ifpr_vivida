@@ -28,7 +28,7 @@ func GravarLivro(c *fiber.Ctx) error {
 		})
 	}
 
-	if resultado.ID > 0 {
+	if resultado.ID_LIVRO > 0 {
 		return c.Status(200).JSON(fiber.Map{
 			"status":  "sucesso",
 			"message": "dados obtidos com sucesso",
@@ -60,7 +60,7 @@ func EditarLivro(c *fiber.Ctx) error {
 		})
 	}
 
-	if resultado.ID > 0 {
+	if resultado.ID_LIVRO > 0 {
 		return c.Status(200).JSON(fiber.Map{
 			"status":  "sucesso",
 			"message": "dados editados com sucesso",
@@ -99,8 +99,28 @@ func ExcluirLivro(c *fiber.Ctx) error {
 	})
 }
 
-func RetornaListaLivros(c *fiber.Ctx) error {
+func AtualizarRegistros(c *fiber.Ctx) error {
 	var book livro.Books
+
+	var resultado, erro = book.AtualizarRegistros()
+
+	if erro != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "falha",
+			"message": "falha ao obter dados",
+			"details": erro.Error(),
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"status":  "sucesso",
+		"message": "dados atualizados com sucesso",
+		"data":    resultado,
+	})
+}
+
+func RetornaListaLivros(c *fiber.Ctx) error {
+	var book livro.Books_Paginacao
 	var falha = c.BodyParser(&book)
 
 	if falha != nil {
