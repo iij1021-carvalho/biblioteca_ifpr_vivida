@@ -5,51 +5,16 @@ import (
 )
 
 type Books struct {
-	ID_LIVRO     int    `json:"ID_LIVRO"`
-	DATA         string `json:"DATA"`
-	CODIGO_LIVRO int    `json:"CODIGO_LIVRO"`
-	AUTOR        string `json:"AUTOR"`
-	TITULO       string `json:"TITULO"`
-	ISBN         string `json:"ISBN"`
-	IDCATEGORIA  int    `json:"IDCATEGORIA"`
+	IDBOOK      int    `json:"IDBOOK"`
+	AUTOR       string `json:"AUTOR"`
+	TITULO      string `json:"TITULO"`
+	ISBN        string `json:"ISBN"`
+	IDCATEGORIA int    `json:"IDCATEGORIA"`
 }
 
 type Books_Paginacao struct {
 	INICIAL int `json:"INICIAL"`
 	FINAL   int `json:"FINAL"`
-}
-
-func (book Books) AtualizarRegistros() (Books, error) {
-	var conexaogeral = conexao.Conexao_DataBase()
-	var transacao, erro = conexaogeral.Begin()
-
-	if erro != nil {
-		return book, erro
-	}
-
-	var resultado, err = conexaogeral.Query(`SELECT ID_LIVRO FROM LIVRO`)
-
-	if err != nil {
-		return book, err
-	}
-
-	for resultado.Next() {
-		var errr = resultado.Scan(&book.ID_LIVRO)
-
-		if errr != nil {
-			return book, errr
-		}
-
-		var _, erro = transacao.Exec(`UPDATE LIVRO SET IDCATEGORIA = ? WHERE ID_LIVRO = ?`, book.ID_LIVRO, book.ID_LIVRO)
-
-		if erro != nil {
-			return book, erro
-		}
-	}
-
-	transacao.Commit()
-	return book, nil
-
 }
 
 func (book Books) RegistrarLivro() (Books, error) {
@@ -62,13 +27,12 @@ func (book Books) RegistrarLivro() (Books, error) {
 	}
 
 	var resultado, err = transacao.Exec(
-		`INSERT INTO LIVRO (DATA,CODIGO_LIVRO,AUTOR,TITULO,ISBN)
-					 VALUES(?,?,?,?,?)`,
-		book.DATA,
-		book.CODIGO_LIVRO,
+		`INSERT INTO BOOK (AUTOR,TITULO,ISBN,IDCATEGORIA)
+					 VALUES(?,?,?,?)`,
 		book.AUTOR,
 		book.TITULO,
-		book.ISBN)
+		book.ISBN,
+		book.IDCATEGORIA)
 
 	if err != nil {
 		transacao.Rollback()
@@ -84,7 +48,7 @@ func (book Books) RegistrarLivro() (Books, error) {
 
 	if row > 0 {
 		transacao.Commit()
-		book.ID_LIVRO = int(row)
+		book.IDBOOK = int(row)
 	}
 	return book, nil
 }
@@ -98,19 +62,17 @@ func (book Books) EditarLivro() (Books, error) {
 	}
 
 	var resultado, erro = transacao.Exec(
-		`UPDATE LIVRO 
-		    SET DATA = ?,
-		        CODIGO_LIVRO = ?,
-		  	    AUTOR = ?,
+		`UPDATE BOOK 
+		    SET AUTOR = ?,
 			    TITULO = ?,
-			    ISBN = ?
-		  WHERE ID_LIVRO = ?`,
-		book.DATA,
-		book.CODIGO_LIVRO,
+			    ISBN = ?,
+				IDCATEGORIA = ?
+		  WHERE IDBOOK = ?`,
 		book.AUTOR,
 		book.TITULO,
 		book.ISBN,
-		book.ID_LIVRO)
+		book.IDBOOK,
+		book.IDCATEGORIA)
 
 	if erro != nil {
 		return book, erro
@@ -137,7 +99,7 @@ func (book Books) DeletarLivro() (Books, error) {
 		return book, err
 	}
 
-	_, erro := transacao.Exec(`DELETE FROM LIVRO WHERE ID_LIVRO = ?`, book.ID_LIVRO)
+	_, erro := transacao.Exec(`DELETE FROM BOOK WHERE IDBOOK = ?`, book.IDBOOK)
 
 	if erro != nil {
 		return book, erro
@@ -156,14 +118,13 @@ func (book Books_Paginacao) RetornaTodosLivros() ([]Books, error) {
 	}
 
 	var resultado, erro = transacao.Query(`
-			SELECT ID_LIVRO,
-				   DATE_FORMAT(DATA,'%d/%m/%Y') AS DATA,
-				   CODIGO_LIVRO,
+			SELECT IDBOOK,
 				   AUTOR,
 				   TITULO,
-				   ISBN
-			  FROM LIVRO
-			 WHERE ID_LIVRO > ?
+				   ISBN,
+				   IDCATEGORIA
+			  FROM BOOK
+			 WHERE IDBOOK > ?
 			 LIMIT ?`, book.INICIAL, book.FINAL)
 
 	if erro != nil {
@@ -171,7 +132,7 @@ func (book Books_Paginacao) RetornaTodosLivros() ([]Books, error) {
 	}
 
 	for resultado.Next() {
-		erro = resultado.Scan(&books.ID_LIVRO, &books.DATA, &books.CODIGO_LIVRO, &books.AUTOR, &books.TITULO, &books.ISBN)
+		erro = resultado.Scan(&books.IDBOOK, &books.AUTOR, &books.TITULO, &books.ISBN, &books.IDCATEGORIA)
 		if erro != nil {
 			return book_, erro
 		}
