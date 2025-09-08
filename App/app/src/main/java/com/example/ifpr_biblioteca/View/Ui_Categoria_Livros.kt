@@ -31,11 +31,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 @SuppressLint("ResourceAsColor")
-@Preview
 @Composable
-fun ListaCategoriaLivros() {
+fun ListaCategoriaLivros(navController: NavController) {
     var texto by remember { mutableStateOf("") }
 
     Box(
@@ -47,7 +47,7 @@ fun ListaCategoriaLivros() {
         LazyColumn {
             item {
                 Row {
-                    RenderizaMenu()
+                    RenderizaMenu(navController)
                     OutlinedTextField(
                         modifier = Modifier
                             .width(300.dp),

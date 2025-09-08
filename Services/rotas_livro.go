@@ -99,6 +99,35 @@ func ExcluirLivro(c *fiber.Ctx) error {
 	})
 }
 
+func BuscaLivroCodigoBarra(c *fiber.Ctx) error {
+	var book livro.Books
+	var falha = c.BodyParser(&book)
+
+	if falha != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "falha",
+			"message": "falha ao deletar dados",
+			"details": falha.Error(),
+		})
+	}
+
+	var res, erro = book.BuscaLivroCodigo()
+
+	if erro != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "falha",
+			"message": "falha ao deletar dados",
+			"details": erro.Error(),
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"status":  "sucesso",
+		"message": "dados obtidos com sucesso",
+		"data":    res,
+	})
+}
+
 func RetornaListaLivros(c *fiber.Ctx) error {
 	var book livro.Books_Paginacao
 	var falha = c.BodyParser(&book)

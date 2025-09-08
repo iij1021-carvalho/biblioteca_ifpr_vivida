@@ -2,7 +2,8 @@ package com.example.ifpr_biblioteca.Model.Viewmodel
 
 import com.example.ifpr_biblioteca.Data.Dt_Categoria
 import com.example.ifpr_biblioteca.Data.Dt_CategoriaResponse
-import com.example.ifpr_biblioteca.Data.Dt_Livro
+import com.example.ifpr_biblioteca.Data.Dt_Book
+import com.example.ifpr_biblioteca.Data.Dt_LivrosResponse
 import com.example.ifpr_biblioteca.Data.Dt_Usuario
 import com.example.ifpr_biblioteca.Data.Dt_UsuarioResponse
 import retrofit2.http.Body
@@ -12,13 +13,16 @@ import retrofit2.http.PUT
 
 interface Rotas {
     @POST("registrarlivro")
-    suspend fun registrarlivros(@Body books: Dt_Livro): retrofit2.Response<Dt_Livro>
+    suspend fun registrarlivros(@Body books: Dt_Book): retrofit2.Response<Dt_Book>
 
     @PUT("editarlivro")
-    suspend fun editarlivro(@Body books: Dt_Livro): retrofit2.Response<Dt_Livro>
+    suspend fun editarlivro(@Body books: Dt_Book): retrofit2.Response<Dt_Book>
 
     @POST("deletarlivro")
-    suspend fun deletarlivro(@Body books: Dt_Livro): retrofit2.Response<Dt_Livro>
+    suspend fun deletarlivro(@Body books: Dt_Book): retrofit2.Response<Dt_Book>
+
+    @POST("buscarlivro")
+    suspend fun buscarlivroQrCode(@Body books: Dt_Book): retrofit2.Response<Dt_LivrosResponse>
 
     @POST("registrarusuario")
     suspend fun registrarusuario(@Body usuario: Dt_Usuario): retrofit2.Response<Dt_Usuario>

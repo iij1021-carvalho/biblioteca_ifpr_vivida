@@ -48,7 +48,7 @@ fun ListaLivros(navController: NavController) {
         LazyColumn {
             item {
                 Row {
-                    RenderizaMenu()
+                    RenderizaMenu(navController)
                     OutlinedTextField(
                         modifier = Modifier
                             .width(320.dp),

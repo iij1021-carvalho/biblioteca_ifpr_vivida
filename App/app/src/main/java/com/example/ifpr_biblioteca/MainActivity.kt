@@ -1,6 +1,7 @@
 package com.example.ifpr_biblioteca
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -8,8 +9,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.ifpr_biblioteca.Model.Viewmodel.ViewModelUsuario
+import com.example.ifpr_biblioteca.Model.Viewmodel.ViewModel_Inventario
 import com.example.ifpr_biblioteca.Model.Viewmodel.ViewModel_Livro
 import com.example.ifpr_biblioteca.View.EntradaUsuario
+import com.example.ifpr_biblioteca.View.Inventario
 import com.example.ifpr_biblioteca.View.ListaLivros
 import com.example.ifpr_biblioteca.View.RegistrarLivro
 import com.example.ifpr_biblioteca.View.RegistrarUsuario
@@ -34,6 +37,16 @@ class MainActivity : ComponentActivity() {
 
                     composable("ListaLivros") {
                         ListaLivros(nav)
+                    }
+
+                    composable("registrarlivro"){
+                        val viewmodelLivro: ViewModel_Livro = viewModel()
+                        RegistrarLivro(nav,viewmodelLivro)
+                    }
+
+                    composable("Inventario"){
+                        val viewmodelInventario: ViewModel_Inventario = viewModel()
+                        Inventario(nav,viewmodelInventario)
                     }
                 }
             }

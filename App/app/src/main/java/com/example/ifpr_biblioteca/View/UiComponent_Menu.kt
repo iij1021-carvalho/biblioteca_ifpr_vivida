@@ -17,11 +17,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.ifpr_biblioteca.Data.RetornaMenu
 
 @Preview
 @Composable
-fun RenderizaMenu() {
+fun RenderizaMenu(navController: NavController) {
     var expanded by remember { mutableStateOf(false) }
     val menuopcoes = RetornaMenu()
 
@@ -39,7 +40,40 @@ fun RenderizaMenu() {
         menuopcoes.forEach {
             DropdownMenuItem(
                 text = { Text(it.descricao) },
-                onClick = { /* Do something... */ }
+                onClick = {
+                    if(it.descricao == "Cadastrar livro"){
+                        navController.navigate("registrarlivro")
+                    }
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun RenderizaMenu1() {
+    var expanded by remember { mutableStateOf(false) }
+    val menuopcoes = RetornaMenu()
+
+    IconButton(
+        modifier = Modifier
+            .padding(top = 15.dp)
+            .width(50.dp),
+        onClick = { expanded = !expanded }) {
+        Icon(Icons.Default.Menu, contentDescription = "Mais opções")
+    }
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = { expanded = false }
+    ) {
+        menuopcoes.forEach {
+            DropdownMenuItem(
+                text = { Text(it.descricao) },
+                onClick = {
+                    if(it.descricao == "Cadastrar livro"){
+
+                    }
+                }
             )
         }
     }

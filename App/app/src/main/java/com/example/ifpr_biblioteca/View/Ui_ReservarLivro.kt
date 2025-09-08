@@ -19,11 +19,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.ifpr_biblioteca.R
 
-@Preview
 @Composable
-fun ReservarLivro() {
+fun ReservarLivro(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -35,7 +35,7 @@ fun ReservarLivro() {
         ) {
             item {
                 Row {
-                    RenderizaMenu()
+                    RenderizaMenu(navController)
                 }
             }
 

@@ -4,9 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Dt_Categoria(
-    val ID_CATEGORIA_LIVRO: Int = 0,
-    val DESCRICAO_CATEGORIA: String = "",
-    val ATIVO_CATEGORIA: Boolean = false
+    val IDCATEGORIA: Int = 0,
+    val DESCRICAO: String = "",
 )
 
 @Serializable

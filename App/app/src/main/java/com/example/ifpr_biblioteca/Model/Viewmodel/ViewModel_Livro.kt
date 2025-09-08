@@ -1,20 +1,12 @@
 package com.example.ifpr_biblioteca.Model.Viewmodel
 
-import android.util.Log.e
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ifpr_biblioteca.Data.CategoriaUiState
-import com.example.ifpr_biblioteca.Data.Dt_Livro
 import com.example.ifpr_biblioteca.Data.LivroOperacao
 import com.example.ifpr_biblioteca.Data.LivroUiState
-import com.example.ifpr_biblioteca.Data.UsuarioOperacao
-import com.example.ifpr_biblioteca.Data.UsuarioUiState
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ViewModel_Livro(private val api_rotas: Api = Api()) : ViewModel() {
     private val _uiState = MutableStateFlow<LivroUiState>(LivroUiState.Idle)

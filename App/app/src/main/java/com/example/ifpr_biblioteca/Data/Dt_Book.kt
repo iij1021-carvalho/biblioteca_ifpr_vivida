@@ -3,28 +3,26 @@ package com.example.ifpr_biblioteca.Data
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Dt_Livro(
-    val ID: Int = 0,
-    val TITULO: String = "",
+data class Dt_Book(
+    val IDBOOK: Int = 0,
+    val CODIGO_BARRA: String? = 0,
     val AUTOR: String = "",
-    val ANO: String = "",
-    val QRCODE: String = "",
-    val STATUS: String = "",
-    val ID_CATEGORIA: Int = 0,
-    val ID_LOCALIZACAO: Int = 0,
-    val PASTA_CAPA: String = ""
+    val TITULO: String = "",
+    val ISBN: String = "",
+    val IDCATEGORIA: Int = 0
 )
 
 data class Dt_LivrosResponse(
     val status: String,
     val message: String,
-    val data: List<Dt_Livro>
+    val data: List<Dt_Book>
 )
 
 sealed class LivroOperacao {
-    data class Novo(val livro: Dt_Livro) : LivroOperacao()
-    data class Editar(val livro: Dt_Livro) : LivroOperacao()
-    data class Excluir(val livro: Dt_Livro) : LivroOperacao()
+    data class Novo(val livro: Dt_Book) : LivroOperacao()
+    data class Editar(val livro: Dt_Book) : LivroOperacao()
+    data class Excluir(val livro: Dt_Book) : LivroOperacao()
+    data class Dados(val livro: Dt_Book) : LivroOperacao()
 }
 
 sealed class LivroUiState {

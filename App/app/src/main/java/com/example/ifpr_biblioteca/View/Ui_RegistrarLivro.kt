@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.ifpr_biblioteca.Data.Dt_Livro
+import com.example.ifpr_biblioteca.Data.Dt_Book
 import com.example.ifpr_biblioteca.Data.LivroOperacao.Novo
 import com.example.ifpr_biblioteca.Data.LivroUiState
 import com.example.ifpr_biblioteca.Model.Viewmodel.ViewModel_Livro
@@ -136,16 +136,11 @@ fun RegistrarLivro(navController: NavController, viewmodelivro: ViewModel_Livro)
                 .width(320.dp),
             onClick = {
                 val booksList =
-                    Dt_Livro(
-                        ID = 0,
-                        TITULO = "Clean Code",
-                        AUTOR = "Robert C. Martin",
-                        ANO = "2008",
-                        QRCODE = "QR123456",
-                        STATUS = "D", // D = Disponível, E = Emprestado, etc
-                        ID_CATEGORIA = 10,
-                        ID_LOCALIZACAO = 5,
-                        PASTA_CAPA = "images/clean_code.jpg"
+                    Dt_Book(
+                        AUTOR = "Clean Code",
+                        TITULO = "Clean Code programação",
+                        ISBN = "012454545",
+                        IDCATEGORIA = 869
                     )
                 viewmodelivro.executarOperacao(Novo(booksList))
             }
@@ -160,6 +155,7 @@ fun RegistrarLivro(navController: NavController, viewmodelivro: ViewModel_Livro)
         when (uiState) {
             is LivroUiState.Sucess -> {
                 Text("✅ ${(uiState as LivroUiState.Sucess).message}")
+                navController.navigate("ListaLivros")
             }
 
             is LivroUiState.Erro -> {
