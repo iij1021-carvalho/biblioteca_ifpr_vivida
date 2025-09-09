@@ -22,7 +22,7 @@ interface Rotas {
     suspend fun deletarlivro(@Body books: Dt_Book): retrofit2.Response<Dt_Book>
 
     @POST("buscarlivro")
-    suspend fun buscarlivroQrCode(@Body books: Dt_Book): retrofit2.Response<Dt_LivrosResponse>
+    suspend fun buscarlivroQrCode(@Body books: List<Dt_Book>): retrofit2.Response<Dt_LivrosResponse>
 
     @POST("registrarusuario")
     suspend fun registrarusuario(@Body usuario: Dt_Usuario): retrofit2.Response<Dt_Usuario>

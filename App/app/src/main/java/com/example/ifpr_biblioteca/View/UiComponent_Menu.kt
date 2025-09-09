@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.ifpr_biblioteca.Data.RetornaMenu
 
-@Preview
 @Composable
 fun RenderizaMenu(navController: NavController) {
     var expanded by remember { mutableStateOf(false) }
@@ -43,6 +42,9 @@ fun RenderizaMenu(navController: NavController) {
                 onClick = {
                     if(it.descricao == "Cadastrar livro"){
                         navController.navigate("registrarlivro")
+                    }
+                    if(it.descricao == "Inventario"){
+                        navController.navigate("Inventario")
                     }
                 }
             )
@@ -70,9 +72,7 @@ fun RenderizaMenu1() {
             DropdownMenuItem(
                 text = { Text(it.descricao) },
                 onClick = {
-                    if(it.descricao == "Cadastrar livro"){
 
-                    }
                 }
             )
         }

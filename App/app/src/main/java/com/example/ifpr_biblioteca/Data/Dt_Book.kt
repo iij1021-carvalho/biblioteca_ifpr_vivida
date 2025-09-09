@@ -5,13 +5,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Dt_Book(
     val IDBOOK: Int = 0,
-    val CODIGO_BARRA: String? = 0,
+    val CODIGO_BARRA: String = "",
     val AUTOR: String = "",
     val TITULO: String = "",
     val ISBN: String = "",
     val IDCATEGORIA: Int = 0
 )
-
 data class Dt_LivrosResponse(
     val status: String,
     val message: String,
