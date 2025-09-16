@@ -1,6 +1,7 @@
 package com.example.ifpr_biblioteca.View
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
@@ -22,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,15 +34,28 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.ifpr_biblioteca.Data.Books_Paginacao
+import com.example.ifpr_biblioteca.Data.Dt_Book
+import com.example.ifpr_biblioteca.Data.Dt_LivrosResponse
+import com.example.ifpr_biblioteca.Model.Viewmodel.ViewModel_Livro
 import com.example.ifpr_biblioteca.R
 
-@SuppressLint("ResourceAsColor")
 @Composable
-fun ListaLivros(navController: NavController) {
+fun ListaLivros(navController: NavController, viewmodelLivro: ViewModel_Livro) {
     var texto by remember { mutableStateOf("") }
+    val listaLivros by viewmodelLivro.livro.collectAsState()
+
+    viewmodelLivro.retornalivros(
+        Books_Paginacao(
+            INICIAL = 0,
+            FINAL = 20
+        )
+    )
 
     Box(
         modifier = Modifier
@@ -48,7 +66,7 @@ fun ListaLivros(navController: NavController) {
         LazyColumn {
             item {
                 Row {
-                    RenderizaMenu(navController)
+                    RenderizaMenu1()
                     OutlinedTextField(
                         modifier = Modifier
                             .width(320.dp),
@@ -71,7 +89,7 @@ fun ListaLivros(navController: NavController) {
                     text = "Adicionados recentemente"
                 )
 
-                LivrosAdicionadosRecentemente()
+                LivrosAdicionadosRecentemente(viewmodelLivro, listaLivros)
 
                 Text(
                     modifier = Modifier
@@ -86,14 +104,16 @@ fun ListaLivros(navController: NavController) {
 }
 
 @Composable
-fun LivrosAdicionadosRecentemente() {
-    Row(
+fun LivrosAdicionadosRecentemente(viewmodelLivro: ViewModel_Livro, Dtlivro: List<Dt_Book>) {
+    val listState = rememberLazyListState()
+    LazyRow(
+        state = listState,
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        repeat(3) {
+        items(Dtlivro) { livro ->
             Card(
                 elevation = CardDefaults.cardElevation(2.dp),
                 colors = CardDefaults.cardColors(
@@ -103,14 +123,23 @@ fun LivrosAdicionadosRecentemente() {
                     .padding(end = 5.dp, start = 5.dp)
                     .size(width = 110.dp, height = 135.dp)
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.pe), // Ex: R.drawable.capa_aventura
-                    contentDescription = "Capa do livro",
-                    modifier = Modifier
-                        .fillMaxSize() // Ajuste o modificador conforme necessário
+                Text(
+                    text = livro.TITULO ?: "",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontSize = 11.sp
                 )
             }
         }
+    }
+
+    val lastvisibleindex = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
+    if (lastvisibleindex == Dtlivro.lastIndex - 6) {
+        viewmodelLivro.retornalivros(
+            Books_Paginacao(
+                INICIAL = Dtlivro.size * 2,
+                FINAL = 20
+            )
+        )
     }
 }
 

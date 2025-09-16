@@ -128,7 +128,7 @@ func BuscaLivroCodigoBarra(c *fiber.Ctx) error {
 	})
 }
 
-func RetornaListaLivros(c *fiber.Ctx) error {
+func RetornaLivrosPaginacao(c *fiber.Ctx) error {
 	var book livro.Books_Paginacao
 	var falha = c.BodyParser(&book)
 
@@ -140,7 +140,7 @@ func RetornaListaLivros(c *fiber.Ctx) error {
 		})
 	}
 
-	var resultado, erro = book.RetornaTodosLivros()
+	var resultado, erro = book.RetornaLivrosPaginacao()
 
 	if erro != nil {
 		return c.Status(400).JSON(fiber.Map{

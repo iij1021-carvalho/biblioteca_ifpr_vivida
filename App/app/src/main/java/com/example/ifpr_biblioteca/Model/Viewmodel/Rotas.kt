@@ -1,5 +1,6 @@
 package com.example.ifpr_biblioteca.Model.Viewmodel
 
+import com.example.ifpr_biblioteca.Data.Books_Paginacao
 import com.example.ifpr_biblioteca.Data.Dt_Categoria
 import com.example.ifpr_biblioteca.Data.Dt_CategoriaResponse
 import com.example.ifpr_biblioteca.Data.Dt_Book
@@ -21,8 +22,11 @@ interface Rotas {
     @POST("deletarlivro")
     suspend fun deletarlivro(@Body books: Dt_Book): retrofit2.Response<Dt_Book>
 
+    @POST("retornalivrospaginacao")
+    suspend fun retornalivropaginacao(@Body books: Books_Paginacao): retrofit2.Response<Dt_LivrosResponse>
+
     @POST("buscarlivro")
-    suspend fun buscarlivroQrCode(@Body books: List<Dt_Book>): retrofit2.Response<Dt_LivrosResponse>
+    suspend fun buscarlivroQrCode(@Body books: Dt_Book): retrofit2.Response<Dt_LivrosResponse>
 
     @POST("registrarusuario")
     suspend fun registrarusuario(@Body usuario: Dt_Usuario): retrofit2.Response<Dt_Usuario>

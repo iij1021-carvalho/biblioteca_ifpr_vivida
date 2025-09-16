@@ -5,11 +5,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Dt_Book(
     val IDBOOK: Int = 0,
-    val CODIGO_BARRA: String = "",
+    val CODIGO_BARRA: Int = 0,
     val AUTOR: String = "",
     val TITULO: String = "",
     val ISBN: String = "",
-    val IDCATEGORIA: Int = 0
+    val IDCATEGORIA: Int = 0,
+    var QUANTIDADE: Int = 0
 )
 data class Dt_LivrosResponse(
     val status: String,
@@ -17,6 +18,10 @@ data class Dt_LivrosResponse(
     val data: List<Dt_Book>
 )
 
+data class Books_Paginacao(
+    val INICIAL: Int = 0,
+    val FINAL: Int = 0
+)
 sealed class LivroOperacao {
     data class Novo(val livro: Dt_Book) : LivroOperacao()
     data class Editar(val livro: Dt_Book) : LivroOperacao()

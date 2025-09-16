@@ -118,7 +118,7 @@ fun EntradaUsuario(navController: NavController, viewModelUsuario: ViewModelUsua
                     viewModelUsuario.executarOperacao(
                         UsuarioOperacao.Entrar(
                             Dt_Usuario(
-                                NOME_USUARIO = usuario, SENHA_USUARIO = senha
+                                NOME_USUARIO = "fabio", SENHA_USUARIO = "1021"
                             )
                         )
                     )

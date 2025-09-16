@@ -11,6 +11,7 @@ type Books struct {
 	TITULO       string `json:"TITULO"`
 	ISBN         string `json:"ISBN"`
 	IDCATEGORIA  int    `json:"IDCATEGORIA"`
+	QUANTIDADE   int    `json:"QUANTIDADE"`
 }
 
 type Books_Paginacao struct {
@@ -28,13 +29,14 @@ func (book Books) RegistrarLivro() (Books, error) {
 	}
 
 	var resultado, err = transacao.Exec(
-		`INSERT INTO BOOK (CODIGO_BARRA,AUTOR,TITULO,ISBN,IDCATEGORIA)
-					 VALUES(?,?,?,?,?)`,
+		`INSERT INTO BOOK (CODIGO_BARRA,AUTOR,TITULO,ISBN,IDCATEGORIA,QUANTIDADE)
+					 VALUES(?,?,?,?,?,?)`,
 		book.CODIGO_BARRA,
 		book.AUTOR,
 		book.TITULO,
 		book.ISBN,
-		book.IDCATEGORIA)
+		book.IDCATEGORIA,
+		book.QUANTIDADE)
 
 	if err != nil {
 		transacao.Rollback()
@@ -69,14 +71,16 @@ func (book Books) EditarLivro() (Books, error) {
 				AUTOR = ?,
 			    TITULO = ?,
 			    ISBN = ?,
-				IDCATEGORIA = ?
+				IDCATEGORIA = ?,
+				QUANTIDADE = ?
 		  WHERE IDBOOK = ?`,
 		book.CODIGO_BARRA,
 		book.AUTOR,
 		book.TITULO,
 		book.ISBN,
 		book.IDBOOK,
-		book.IDCATEGORIA)
+		book.IDCATEGORIA,
+		book.QUANTIDADE)
 
 	if erro != nil {
 		return book, erro
@@ -120,7 +124,8 @@ func (book Books) BuscaLivroCodigo() ([]Books, error) {
 					   AUTOR,
 			           TITULO,
 					   ISBN,
-			           IDCATEGORIA
+			           IDCATEGORIA,
+					   QUANTIDADE
 				  FROM BOOK
 				 WHERE CODIGO_BARRA = ?`, book.CODIGO_BARRA)
 
@@ -129,7 +134,7 @@ func (book Books) BuscaLivroCodigo() ([]Books, error) {
 	}
 
 	for resultado.Next() {
-		var errr = resultado.Scan(&book.IDBOOK, &book.CODIGO_BARRA, &book.AUTOR, &book.TITULO, &book.ISBN, &book.IDCATEGORIA)
+		var errr = resultado.Scan(&book.IDBOOK, &book.CODIGO_BARRA, &book.AUTOR, &book.TITULO, &book.ISBN, &book.IDCATEGORIA, &book.QUANTIDADE)
 
 		if errr != nil {
 			return book_, errr
@@ -140,7 +145,7 @@ func (book Books) BuscaLivroCodigo() ([]Books, error) {
 	return book_, nil
 }
 
-func (book Books_Paginacao) RetornaTodosLivros() ([]Books, error) {
+func (book Books_Paginacao) RetornaLivrosPaginacao() ([]Books, error) {
 	var conexaogeral = conexao.Conexao_DataBase()
 	var transacao, err = conexaogeral.Begin()
 	var book_ []Books
@@ -151,22 +156,24 @@ func (book Books_Paginacao) RetornaTodosLivros() ([]Books, error) {
 	}
 
 	var resultado, erro = transacao.Query(`
-			SELECT IDBOOK,
-				   CODIGO_BARRA,
-				   AUTOR,
-				   TITULO,
-				   ISBN,
-				   IDCATEGORIA
-			  FROM BOOK
-			 WHERE IDBOOK > ?
-			 LIMIT ?`, book.INICIAL, book.FINAL)
+			SELECT DISTINCT ISBN,
+	   			   IDBOOK,
+	   			   CODIGO_BARRA,
+       			   AUTOR,
+       			   TITULO,
+       			   QUANTIDADE
+       		  FROM BOOK
+   			 WHERE IDBOOK > ?
+   			ORDER BY IDBOOK
+   			LIMIT ?`,
+		book.INICIAL, book.FINAL)
 
 	if erro != nil {
 		return book_, erro
 	}
 
 	for resultado.Next() {
-		erro = resultado.Scan(&books.IDBOOK, &books.CODIGO_BARRA, &books.AUTOR, &books.TITULO, &books.ISBN, &books.IDCATEGORIA)
+		erro = resultado.Scan(&books.ISBN, &books.IDBOOK, &books.CODIGO_BARRA, &books.AUTOR, &books.TITULO, &books.QUANTIDADE)
 		if erro != nil {
 			return book_, erro
 		}
