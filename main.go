@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	servicos "meuapp/Services"
+	conexao "meuapp/db"
 	"net"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -23,6 +24,9 @@ func GetIpMaquina() net.IP {
 }
 
 func main() {
+	conexao.Conexao_DataBase()
+	defer conexao.DB.Close()
+
 	api := fiber.New()
 	api.Post("/registrarlivro", servicos.GravarLivro)
 	api.Put("/editarlivro", servicos.EditarLivro)

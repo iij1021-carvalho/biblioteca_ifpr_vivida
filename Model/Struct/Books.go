@@ -1,6 +1,7 @@
 package Model
 
 import (
+	"errors"
 	conexao "meuapp/db"
 )
 
@@ -20,8 +21,8 @@ type Books_Paginacao struct {
 }
 
 func (book Books) RegistrarLivro() (Books, error) {
-	var conexaogeral = conexao.Conexao_DataBase()
-	var transacao, erro = conexaogeral.Begin()
+	db := conexao.DB
+	var transacao, erro = db.Begin()
 
 	if erro != nil {
 		transacao.Rollback()
@@ -58,8 +59,8 @@ func (book Books) RegistrarLivro() (Books, error) {
 }
 
 func (book Books) EditarLivro() (Books, error) {
-	var conexaogeral = conexao.Conexao_DataBase()
-	var transacao, errro = conexaogeral.Begin()
+	db := conexao.DB
+	var transacao, errro = db.Begin()
 
 	if errro != nil {
 		return book, errro
@@ -100,8 +101,8 @@ func (book Books) EditarLivro() (Books, error) {
 }
 
 func (book Books) DeletarLivro() (Books, error) {
-	var conexaogeral = conexao.Conexao_DataBase()
-	var transacao, err = conexaogeral.Begin()
+	db := conexao.DB
+	var transacao, err = db.Begin()
 
 	if err != nil {
 		return book, err
@@ -116,9 +117,9 @@ func (book Books) DeletarLivro() (Books, error) {
 }
 
 func (book Books) BuscaLivroCodigo() ([]Books, error) {
-	var conexaogeral = conexao.Conexao_DataBase()
+	db := conexao.DB
 	var book_ []Books
-	var resultado, erro = conexaogeral.Query(`
+	var resultado, erro = db.Query(`
 				SELECT IDBOOK,
 					   CODIGO_BARRA,
 					   AUTOR,
@@ -146,31 +147,39 @@ func (book Books) BuscaLivroCodigo() ([]Books, error) {
 }
 
 func (book Books_Paginacao) RetornaLivrosPaginacao() ([]Books, error) {
-	var conexaogeral = conexao.Conexao_DataBase()
-	var transacao, err = conexaogeral.Begin()
 	var book_ []Books
 	var books Books
 
-	if err != nil {
-		return book_, err
+	db := conexao.DB
+
+	if db == nil {
+		return nil, errors.New("conexão com o banco não inicializada")
 	}
 
-	var resultado, erro = transacao.Query(`
-			SELECT DISTINCT ISBN,
-	   			   IDBOOK,
-	   			   CODIGO_BARRA,
-       			   AUTOR,
-       			   TITULO,
-       			   QUANTIDADE
-       		  FROM BOOK
-   			 WHERE IDBOOK > ?
-   			ORDER BY IDBOOK
-   			LIMIT ?`,
+	var resultado, erro = db.Query(`
+		   WITH livros_unicos AS (
+    			SELECT *,
+					   ROW_NUMBER() OVER (PARTITION BY ISBN ORDER BY IDBOOK ASC) AS rn
+				  FROM BOOK
+				 WHERE IDBOOK > ?
+			)
+			SELECT ISBN,
+			       IDBOOK,
+				   CODIGO_BARRA,
+				   AUTOR,
+				   TITULO,
+				   QUANTIDADE
+			  FROM livros_unicos
+			 WHERE rn = 1
+			ORDER BY IDBOOK
+			LIMIT ?`,
 		book.INICIAL, book.FINAL)
 
 	if erro != nil {
 		return book_, erro
 	}
+
+	defer resultado.Close()
 
 	for resultado.Next() {
 		erro = resultado.Scan(&books.ISBN, &books.IDBOOK, &books.CODIGO_BARRA, &books.AUTOR, &books.TITULO, &books.QUANTIDADE)

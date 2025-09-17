@@ -12,6 +12,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
+var DB *sql.DB
+
 func RetornaDadosConexao() string {
 	var err = godotenv.Load("arquivo.env")
 
@@ -29,22 +31,22 @@ func RetornaDadosConexao() string {
 	return configuracao
 }
 
-func Conexao_DataBase() *sql.DB {
-	var db, erro = sql.Open("mysql", RetornaDadosConexao())
-
-	if erro != nil {
-		log.Fatal("Falha ao conectar a base de dados" + erro.Error())
-	}
-
-	var err = db.Ping()
-
+func Conexao_DataBase() {
+	var err error
+	DB, err = sql.Open("mysql", RetornaDadosConexao())
 	if err != nil {
-		log.Fatal("Falha ao pingar na base de dados")
+		log.Fatal("Falha ao conectar ao banco de dados: ", err)
 	}
 
-	db.SetMaxOpenConns(25)
-	db.SetConnMaxLifetime(5 * time.Hour)
-	db.SetMaxIdleConns(25)
+	// Configura pool
+	DB.SetMaxOpenConns(20)
+	DB.SetConnMaxLifetime(30 * time.Hour)
+	DB.SetMaxIdleConns(25)
 
-	return db
+	// Testa conexão
+	if err = DB.Ping(); err != nil {
+		log.Fatal("Falha ao pingar o banco de dados: ", err)
+	}
+
+	log.Println("Conexão com banco inicializada com sucesso")
 }

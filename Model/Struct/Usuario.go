@@ -13,10 +13,10 @@ type Usuario struct {
 }
 
 func (usuario Usuario) EfectuarEntradaUsuario() ([]Usuario, error) {
-	var conexao_geral = conexao.Conexao_DataBase()
+	db := conexao.DB
 	var usuario_ []Usuario
 
-	var resultado, erro = conexao_geral.Query(
+	var resultado, erro = db.Query(
 		`SELECT NOME_USUARIO,
         	    SENHA_USUARIO,
                 EMAIL_USUARIO
@@ -51,8 +51,8 @@ func (usuario Usuario) EfectuarEntradaUsuario() ([]Usuario, error) {
 }
 
 func (usuario Usuario) RegistrarUsuario() (Usuario, error) {
-	var conexao_geral = conexao.Conexao_DataBase()
-	var transacao, err = conexao_geral.Begin()
+	db := conexao.DB
+	var transacao, err = db.Begin()
 
 	if err != nil {
 		transacao.Rollback()
@@ -78,8 +78,8 @@ func (usuario Usuario) RegistrarUsuario() (Usuario, error) {
 }
 
 func (usuario Usuario) EditarUsuario() (Usuario, error) {
-	var conexao_geral = conexao.Conexao_DataBase()
-	var transacao, err = conexao_geral.Begin()
+	db := conexao.DB
+	var transacao, err = db.Begin()
 
 	if err != nil {
 		transacao.Rollback()
@@ -106,8 +106,8 @@ func (usuario Usuario) EditarUsuario() (Usuario, error) {
 }
 
 func (usuario Usuario) ExcluirUsuario() (Usuario, error) {
-	var conexao_geral = conexao.Conexao_DataBase()
-	var transacao, err = conexao_geral.Begin()
+	db := conexao.DB
+	var transacao, err = db.Begin()
 
 	if err != nil {
 		transacao.Rollback()
@@ -129,10 +129,10 @@ func (usuario Usuario) ExcluirUsuario() (Usuario, error) {
 }
 
 func (usuario Usuario) RetornaTodosUsuarios() ([]Usuario, error) {
-	var conexao_geral = conexao.Conexao_DataBase()
+	db := conexao.DB
 	var usuario_ []Usuario
 
-	var resultado, erro = conexao_geral.Query(`
+	var resultado, erro = db.Query(`
 		SELECT ID_USUARIO,	
 			   NOME_USUARIO,
 			   SENHA_USUARIO,

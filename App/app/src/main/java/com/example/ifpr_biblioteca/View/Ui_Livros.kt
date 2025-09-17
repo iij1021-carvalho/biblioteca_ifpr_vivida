@@ -1,15 +1,14 @@
 package com.example.ifpr_biblioteca.View
 
-import android.annotation.SuppressLint
-import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -33,27 +32,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.ifpr_biblioteca.Data.Books_Paginacao
 import com.example.ifpr_biblioteca.Data.Dt_Book
-import com.example.ifpr_biblioteca.Data.Dt_LivrosResponse
 import com.example.ifpr_biblioteca.Model.Viewmodel.ViewModel_Livro
-import com.example.ifpr_biblioteca.R
 
 @Composable
 fun ListaLivros(navController: NavController, viewmodelLivro: ViewModel_Livro) {
     var texto by remember { mutableStateOf("") }
     val listaLivros by viewmodelLivro.livro.collectAsState()
+    val listState = rememberLazyListState()
 
     viewmodelLivro.retornalivros(
         Books_Paginacao(
             INICIAL = 0,
-            FINAL = 20
+            FINAL = 10
         )
     )
 
@@ -63,7 +59,10 @@ fun ListaLivros(navController: NavController, viewmodelLivro: ViewModel_Livro) {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        LazyColumn {
+        LazyColumn(
+            modifier = Modifier,
+            state = listState
+        ) {
             item {
                 Row {
                     RenderizaMenu1()
@@ -86,7 +85,7 @@ fun ListaLivros(navController: NavController, viewmodelLivro: ViewModel_Livro) {
                 Text(
                     modifier = Modifier
                         .padding(start = 15.dp, top = 10.dp, bottom = 10.dp),
-                    text = "Adicionados recentemente"
+                    text = "Adicionados recentemente", fontWeight = FontWeight.W700
                 )
 
                 LivrosAdicionadosRecentemente(viewmodelLivro, listaLivros)
@@ -94,12 +93,24 @@ fun ListaLivros(navController: NavController, viewmodelLivro: ViewModel_Livro) {
                 Text(
                     modifier = Modifier
                         .padding(start = 15.dp, top = 10.dp, bottom = 10.dp),
-                    text = "Livros"
+                    text = "Livros", fontWeight = FontWeight.W700
                 )
+            }
 
-                LivrosDisponiveis()
+            items(listaLivros.chunked(2)) { livro ->
+                LivrosDisponiveis(livro)
             }
         }
+    }
+
+    val lastvisibleindex = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
+    if (lastvisibleindex == listaLivros.lastIndex - 6) {
+        viewmodelLivro.retornalivros(
+            Books_Paginacao(
+                INICIAL = listaLivros.size * 2,
+                FINAL = 10
+            )
+        )
     }
 }
 
@@ -121,13 +132,17 @@ fun LivrosAdicionadosRecentemente(viewmodelLivro: ViewModel_Livro, Dtlivro: List
                 ),
                 modifier = Modifier
                     .padding(end = 5.dp, start = 5.dp)
-                    .size(width = 110.dp, height = 135.dp)
+                    .size(width = 150.dp, height = 135.dp)
             ) {
-                Text(
-                    text = livro.TITULO ?: "",
-                    style = MaterialTheme.typography.titleSmall,
-                    fontSize = 11.sp
-                )
+                Column {
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 5.dp, end = 5.dp),
+                        text = livro.TITULO, fontWeight = FontWeight.W600,
+                        fontSize = 12.sp,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
             }
         }
     }
@@ -137,39 +152,38 @@ fun LivrosAdicionadosRecentemente(viewmodelLivro: ViewModel_Livro, Dtlivro: List
         viewmodelLivro.retornalivros(
             Books_Paginacao(
                 INICIAL = Dtlivro.size * 2,
-                FINAL = 20
+                FINAL = 10
             )
         )
     }
 }
 
 @Composable
-fun LivrosDisponiveis() {
-    repeat(3) { /// roda o laço da quantidade de livros disponiveis
-        Column {
-            Row(
+fun LivrosDisponiveis(livro: List<Dt_Book>) {
+    Row(
+        modifier = Modifier
+            .padding(5.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        livro.forEach { livro ->
+            Card(
+                elevation = CardDefaults.cardElevation(2.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                ),
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                    .weight(1f)
+                    .width(180.dp)
+                    .padding(end = 5.dp, start = 5.dp)
+                    .height(135.dp)
             ) {
-                repeat(3) { // fixado essse valor para manter o tamanho da tela
-                    Card(
-                        elevation = CardDefaults.cardElevation(2.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        ),
-                        modifier = Modifier
-                            .padding(end = 5.dp, start = 5.dp)
-                            .size(width = 110.dp, height = 135.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.pe), // Ex: R.drawable.capa_aventura
-                            contentDescription = "Capa do livro",
-                            modifier = Modifier
-                                .fillMaxSize() // Ajuste o modificador conforme necessário
-                        )
-                    }
+                Column(modifier = Modifier.padding(10.dp)) {
+                    Text(
+                        livro.TITULO, fontWeight = FontWeight.W700,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text("Autor: ${livro.AUTOR}", color = Color.Gray, fontSize = 11.sp)
                 }
             }
         }
