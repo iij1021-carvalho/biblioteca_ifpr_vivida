@@ -128,6 +128,35 @@ func BuscaLivroCodigoBarra(c *fiber.Ctx) error {
 	})
 }
 
+func BuscaLivroTitulo(c *fiber.Ctx) error {
+	var book livro.Books
+	var falha = c.BodyParser(&book)
+
+	if falha != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "falha",
+			"message": "falha ao deletar dados",
+			"details": falha.Error(),
+		})
+	}
+
+	var res, erro = book.BuscaLivroTitulo()
+
+	if erro != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "falha",
+			"message": "falha ao deletar dados",
+			"details": erro.Error(),
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"status":  "sucesso",
+		"message": "dados obtidos com sucesso",
+		"data":    res,
+	})
+}
+
 func RetornaLivrosPaginacao(c *fiber.Ctx) error {
 	var book livro.Books_Paginacao
 	var falha = c.BodyParser(&book)
@@ -155,4 +184,5 @@ func RetornaLivrosPaginacao(c *fiber.Ctx) error {
 		"message": "dados obtidos com sucesso",
 		"data":    resultado,
 	})
+
 }

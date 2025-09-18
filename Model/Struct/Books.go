@@ -2,6 +2,7 @@ package Model
 
 import (
 	"errors"
+	"log"
 	conexao "meuapp/db"
 )
 
@@ -16,8 +17,9 @@ type Books struct {
 }
 
 type Books_Paginacao struct {
-	INICIAL int `json:"INICIAL"`
-	FINAL   int `json:"FINAL"`
+	INICIAL  int    `json:"INICIAL"`
+	FINAL    int    `json:"FINAL"`
+	PESQUISA string `json:"PESQUISA"`
 }
 
 func (book Books) RegistrarLivro() (Books, error) {
@@ -146,6 +148,38 @@ func (book Books) BuscaLivroCodigo() ([]Books, error) {
 	return book_, nil
 }
 
+func (book Books) BuscaLivroTitulo() ([]Books, error) {
+	db := conexao.DB
+	var book_ []Books
+
+	var pesquisa = book.TITULO + "%"
+	var resultado, erro = db.Query(`
+				SELECT IDBOOK,
+					   CODIGO_BARRA,
+					   AUTOR,
+			           TITULO,
+					   ISBN,
+			           IDCATEGORIA,
+					   QUANTIDADE
+				  FROM BOOK
+				 WHERE TITULO LIKE ?`, pesquisa)
+
+	if erro != nil {
+		return book_, erro
+	}
+
+	for resultado.Next() {
+		var errr = resultado.Scan(&book.IDBOOK, &book.CODIGO_BARRA, &book.AUTOR, &book.TITULO, &book.ISBN, &book.IDCATEGORIA, &book.QUANTIDADE)
+
+		if errr != nil {
+			return book_, errr
+		}
+
+		book_ = append(book_, book)
+	}
+	return book_, nil
+}
+
 func (book Books_Paginacao) RetornaLivrosPaginacao() ([]Books, error) {
 	var book_ []Books
 	var books Books
@@ -156,8 +190,8 @@ func (book Books_Paginacao) RetornaLivrosPaginacao() ([]Books, error) {
 		return nil, errors.New("conexão com o banco não inicializada")
 	}
 
-	var resultado, erro = db.Query(`
-		   WITH livros_unicos AS (
+	var resultado, erro = db.Query(
+		`WITH livros_unicos AS (
     			SELECT *,
 					   ROW_NUMBER() OVER (PARTITION BY ISBN ORDER BY IDBOOK ASC) AS rn
 				  FROM BOOK
@@ -172,8 +206,7 @@ func (book Books_Paginacao) RetornaLivrosPaginacao() ([]Books, error) {
 			  FROM livros_unicos
 			 WHERE rn = 1
 			ORDER BY IDBOOK
-			LIMIT ?`,
-		book.INICIAL, book.FINAL)
+			LIMIT ?`, book.INICIAL, book.FINAL)
 
 	if erro != nil {
 		return book_, erro
@@ -190,5 +223,6 @@ func (book Books_Paginacao) RetornaLivrosPaginacao() ([]Books, error) {
 		book_ = append(book_, books)
 	}
 
+	log.Println(book.INICIAL)
 	return book_, erro
 }

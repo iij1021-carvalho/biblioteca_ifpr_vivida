@@ -9,6 +9,7 @@ import com.example.ifpr_biblioteca.Data.LivroUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 class ViewModel_Livro(private val api_rotas: Api = Api()) : ViewModel() {
@@ -55,6 +56,21 @@ class ViewModel_Livro(private val api_rotas: Api = Api()) : ViewModel() {
             } catch (
                 e: Exception
             ) {
+                _livro.value = emptyList()
+            }
+        }
+    }
+
+    fun buscaLivroTitulo(book: Dt_Book) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val resposta = api_rotas.api.buscalivroTitulo(book)
+                if (resposta.isSuccessful) {
+                    _livro.value = _livro.value + resposta.body()?.data!!
+                }else {
+                    _livro.value = emptyList()
+                }
+            } catch (e: Exception) {
                 _livro.value = emptyList()
             }
         }

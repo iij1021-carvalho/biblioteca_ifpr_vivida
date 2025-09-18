@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,11 +24,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -45,13 +46,6 @@ fun ListaLivros(navController: NavController, viewmodelLivro: ViewModel_Livro) {
     var texto by remember { mutableStateOf("") }
     val listaLivros by viewmodelLivro.livro.collectAsState()
     val listState = rememberLazyListState()
-
-    viewmodelLivro.retornalivros(
-        Books_Paginacao(
-            INICIAL = 0,
-            FINAL = 10
-        )
-    )
 
     Box(
         modifier = Modifier
@@ -75,6 +69,11 @@ fun ListaLivros(navController: NavController, viewmodelLivro: ViewModel_Livro) {
                         },
                         onValueChange = {
                             texto = it
+                            viewmodelLivro.buscaLivroTitulo(
+                                Dt_Book(
+                                    TITULO = it
+                                )
+                            )
                         },
                         label = { Text("Informe o nome do Livro:") }
                     )
@@ -87,8 +86,6 @@ fun ListaLivros(navController: NavController, viewmodelLivro: ViewModel_Livro) {
                         .padding(start = 15.dp, top = 10.dp, bottom = 10.dp),
                     text = "Adicionados recentemente", fontWeight = FontWeight.W700
                 )
-
-                LivrosAdicionadosRecentemente(viewmodelLivro, listaLivros)
 
                 Text(
                     modifier = Modifier
@@ -103,14 +100,20 @@ fun ListaLivros(navController: NavController, viewmodelLivro: ViewModel_Livro) {
         }
     }
 
-    val lastvisibleindex = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
-    if (lastvisibleindex == listaLivros.lastIndex - 6) {
-        viewmodelLivro.retornalivros(
-            Books_Paginacao(
-                INICIAL = listaLivros.size * 2,
-                FINAL = 10
-            )
-        )
+    if (texto.isEmpty()) {
+        LaunchedEffect(listState) {
+            snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+                .collect { lastVisibleItemIndex ->
+                    if (lastVisibleItemIndex != null && lastVisibleItemIndex == listState.layoutInfo.totalItemsCount - 1) {
+                        viewmodelLivro.retornalivros(
+                            Books_Paginacao(
+                                INICIAL = listaLivros.size,
+                                FINAL = 20
+                            )
+                        )
+                    }
+                }
+        }
     }
 }
 
@@ -145,16 +148,6 @@ fun LivrosAdicionadosRecentemente(viewmodelLivro: ViewModel_Livro, Dtlivro: List
                 }
             }
         }
-    }
-
-    val lastvisibleindex = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
-    if (lastvisibleindex == Dtlivro.lastIndex - 6) {
-        viewmodelLivro.retornalivros(
-            Books_Paginacao(
-                INICIAL = Dtlivro.size * 2,
-                FINAL = 10
-            )
-        )
     }
 }
 

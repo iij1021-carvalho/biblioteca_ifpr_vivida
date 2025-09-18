@@ -33,6 +33,7 @@ func main() {
 	api.Post("/deletarlivro", servicos.ExcluirLivro)
 	api.Post("/retornalivrospaginacao", servicos.RetornaLivrosPaginacao)
 	api.Post("/buscarlivro", servicos.BuscaLivroCodigoBarra)
+	api.Post("/buscalivrotitulo", servicos.BuscaLivroTitulo)
 
 	api.Post("/registrarusuario", servicos.RegistrarUsuario)
 	api.Put("/editarusuario", servicos.EditarUsuario)

@@ -25,6 +25,9 @@ interface Rotas {
     @POST("retornalivrospaginacao")
     suspend fun retornalivropaginacao(@Body books: Books_Paginacao): retrofit2.Response<Dt_LivrosResponse>
 
+    @POST("buscalivrotitulo")
+    suspend fun buscalivroTitulo(@Body books: Dt_Book): retrofit2.Response<Dt_LivrosResponse>
+
     @POST("buscarlivro")
     suspend fun buscarlivroQrCode(@Body books: Dt_Book): retrofit2.Response<Dt_LivrosResponse>
 
