@@ -28,7 +28,7 @@ func GravarLivro(c *fiber.Ctx) error {
 		})
 	}
 
-	if resultado.IDBOOK > 0 {
+	if resultado.ID_BOOK > 0 {
 		return c.Status(200).JSON(fiber.Map{
 			"status":  "sucesso",
 			"message": "dados obtidos com sucesso",
@@ -60,7 +60,7 @@ func EditarLivro(c *fiber.Ctx) error {
 		})
 	}
 
-	if resultado.IDBOOK > 0 {
+	if resultado.ID_BOOK > 0 {
 		return c.Status(200).JSON(fiber.Map{
 			"status":  "sucesso",
 			"message": "dados editados com sucesso",

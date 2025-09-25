@@ -7,13 +7,11 @@ import (
 )
 
 type Books struct {
-	IDBOOK       int    `json:"IDBOOK"`
+	ID_BOOK      int    `json:"ID_BOOK"`
 	CODIGO_BARRA int    `json:"CODIGO_BARRA"`
 	AUTOR        string `json:"AUTOR"`
 	TITULO       string `json:"TITULO"`
 	ISBN         string `json:"ISBN"`
-	IDCATEGORIA  int    `json:"IDCATEGORIA"`
-	QUANTIDADE   int    `json:"QUANTIDADE"`
 }
 
 type Books_Paginacao struct {
@@ -32,14 +30,12 @@ func (book Books) RegistrarLivro() (Books, error) {
 	}
 
 	var resultado, err = transacao.Exec(
-		`INSERT INTO BOOK (CODIGO_BARRA,AUTOR,TITULO,ISBN,IDCATEGORIA,QUANTIDADE)
-					 VALUES(?,?,?,?,?,?)`,
+		`INSERT INTO BOOK (CODIGO_BARRA,AUTOR,TITULO,ISBN)
+					 VALUES(?,?,?,?)`,
 		book.CODIGO_BARRA,
 		book.AUTOR,
 		book.TITULO,
-		book.ISBN,
-		book.IDCATEGORIA,
-		book.QUANTIDADE)
+		book.ISBN)
 
 	if err != nil {
 		transacao.Rollback()
@@ -55,7 +51,7 @@ func (book Books) RegistrarLivro() (Books, error) {
 
 	if row > 0 {
 		transacao.Commit()
-		book.IDBOOK = int(row)
+		book.ID_BOOK = int(row)
 	}
 	return book, nil
 }
@@ -73,17 +69,13 @@ func (book Books) EditarLivro() (Books, error) {
 		    SET CODIGO_BARRA = ?,
 				AUTOR = ?,
 			    TITULO = ?,
-			    ISBN = ?,
-				IDCATEGORIA = ?,
-				QUANTIDADE = ?
-		  WHERE IDBOOK = ?`,
+			    ISBN = ?
+		  WHERE ID_BOOK = ?`,
 		book.CODIGO_BARRA,
 		book.AUTOR,
 		book.TITULO,
 		book.ISBN,
-		book.IDBOOK,
-		book.IDCATEGORIA,
-		book.QUANTIDADE)
+		book.ID_BOOK)
 
 	if erro != nil {
 		return book, erro
@@ -110,7 +102,7 @@ func (book Books) DeletarLivro() (Books, error) {
 		return book, err
 	}
 
-	_, erro := transacao.Exec(`DELETE FROM BOOK WHERE IDBOOK = ?`, book.IDBOOK)
+	_, erro := transacao.Exec(`DELETE FROM BOOK WHERE ID_BOOK = ?`, book.ID_BOOK)
 
 	if erro != nil {
 		return book, erro
@@ -122,13 +114,11 @@ func (book Books) BuscaLivroCodigo() ([]Books, error) {
 	db := conexao.DB
 	var book_ []Books
 	var resultado, erro = db.Query(`
-				SELECT IDBOOK,
+				SELECT ID_BOOK,
 					   CODIGO_BARRA,
 					   AUTOR,
 			           TITULO,
-					   ISBN,
-			           IDCATEGORIA,
-					   QUANTIDADE
+					   ISBN
 				  FROM BOOK
 				 WHERE CODIGO_BARRA = ?`, book.CODIGO_BARRA)
 
@@ -137,7 +127,12 @@ func (book Books) BuscaLivroCodigo() ([]Books, error) {
 	}
 
 	for resultado.Next() {
-		var errr = resultado.Scan(&book.IDBOOK, &book.CODIGO_BARRA, &book.AUTOR, &book.TITULO, &book.ISBN, &book.IDCATEGORIA, &book.QUANTIDADE)
+		var errr = resultado.Scan(
+			&book.ID_BOOK,
+			&book.CODIGO_BARRA,
+			&book.AUTOR,
+			&book.TITULO,
+			&book.ISBN)
 
 		if errr != nil {
 			return book_, errr
@@ -154,13 +149,11 @@ func (book Books) BuscaLivroTitulo() ([]Books, error) {
 
 	var pesquisa = book.TITULO + "%"
 	var resultado, erro = db.Query(`
-				SELECT IDBOOK,
+				SELECT ID_BOOK,
 					   CODIGO_BARRA,
 					   AUTOR,
 			           TITULO,
-					   ISBN,
-			           IDCATEGORIA,
-					   QUANTIDADE
+					   ISBN
 				  FROM BOOK
 				 WHERE TITULO LIKE ?`, pesquisa)
 
@@ -169,7 +162,7 @@ func (book Books) BuscaLivroTitulo() ([]Books, error) {
 	}
 
 	for resultado.Next() {
-		var errr = resultado.Scan(&book.IDBOOK, &book.CODIGO_BARRA, &book.AUTOR, &book.TITULO, &book.ISBN, &book.IDCATEGORIA, &book.QUANTIDADE)
+		var errr = resultado.Scan(&book.ID_BOOK, &book.CODIGO_BARRA, &book.AUTOR, &book.TITULO, &book.ISBN)
 
 		if errr != nil {
 			return book_, errr
@@ -193,19 +186,18 @@ func (book Books_Paginacao) RetornaLivrosPaginacao() ([]Books, error) {
 	var resultado, erro = db.Query(
 		`WITH livros_unicos AS (
     			SELECT *,
-					   ROW_NUMBER() OVER (PARTITION BY ISBN ORDER BY IDBOOK ASC) AS rn
+					   ROW_NUMBER() OVER (PARTITION BY ISBN ORDER BY ID_BOOK ASC) AS rn
 				  FROM BOOK
-				 WHERE IDBOOK > ?
+				 WHERE ID_BOOK > ?
 			)
 			SELECT ISBN,
-			       IDBOOK,
+			       ID_BOOK,
 				   CODIGO_BARRA,
 				   AUTOR,
-				   TITULO,
-				   QUANTIDADE
+				   TITULO
 			  FROM livros_unicos
 			 WHERE rn = 1
-			ORDER BY IDBOOK
+			ORDER BY ID_BOOK
 			LIMIT ?`, book.INICIAL, book.FINAL)
 
 	if erro != nil {
@@ -215,7 +207,7 @@ func (book Books_Paginacao) RetornaLivrosPaginacao() ([]Books, error) {
 	defer resultado.Close()
 
 	for resultado.Next() {
-		erro = resultado.Scan(&books.ISBN, &books.IDBOOK, &books.CODIGO_BARRA, &books.AUTOR, &books.TITULO, &books.QUANTIDADE)
+		erro = resultado.Scan(&books.ISBN, &books.ID_BOOK, &books.CODIGO_BARRA, &books.AUTOR, &books.TITULO)
 		if erro != nil {
 			return book_, erro
 		}
