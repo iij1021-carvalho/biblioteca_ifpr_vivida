@@ -1,7 +1,12 @@
 package Services
 
 import (
+	"encoding/json"
+	"fmt"
 	livro "meuapp/Model/Struct"
+	"net/http"
+
+	"io"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -126,6 +131,60 @@ func BuscaLivroCodigoBarra(c *fiber.Ctx) error {
 		"message": "dados obtidos com sucesso",
 		"data":    res,
 	})
+}
+
+func GoogleLivroApi_Isbn(c *fiber.Ctx) error {
+	var api livro.GoogleApi
+	var book livro.Books
+	var falha = c.BodyParser(&book)
+
+	if falha != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "falha",
+			"message": "falha ao receber dados",
+			"details": falha.Error(),
+		})
+	}
+
+	var apikey = "AIzaSyD5BTeDQqB-7MJQGdOnZ7BLcZCg-rGJfGQ"
+
+	var url = fmt.Sprintf("https://www.googleapis.com/books/v1/volumes?q=isbn:%s&key=%s", book.ISBN, apikey)
+
+	var resposta, erro = http.Get(url)
+
+	var dados, errr = io.ReadAll(resposta.Body)
+
+	if errr != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "falha",
+			"message": "falha ao receber dados",
+			"details": erro.Error(),
+		})
+	}
+
+	var ert = json.Unmarshal(dados, &api)
+
+	if ert != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "falha",
+			"message": "falha ao receber dados",
+			"details": ert.Error(),
+		})
+	}
+
+	if len(api.Items) > 0 {
+		return c.Status(200).JSON(fiber.Map{
+			"status":  "sucess",
+			"message": "dados obtidos com sucesso",
+			"data":    api,
+		})
+	} else {
+		return c.Status(200).JSON(fiber.Map{
+			"status":  "sucess",
+			"message": "dados obtidos com sucesso",
+			"data":    api,
+		})
+	}
 }
 
 func BuscaLivroTitulo(c *fiber.Ctx) error {

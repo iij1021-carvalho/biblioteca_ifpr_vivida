@@ -66,12 +66,12 @@ class ViewModel_Livro(private val api_rotas: Api = Api()) : ViewModel() {
             try {
                 val resposta = api_rotas.api.buscalivroTitulo(book)
                 if (resposta.isSuccessful) {
-                    _livro.value = _livro.value + resposta.body()?.data!!
+                    _livro.value = resposta.body()?.data!!
                 }else {
                     _livro.value = emptyList()
                 }
             } catch (e: Exception) {
-                _livro.value = emptyList()
+
             }
         }
     }

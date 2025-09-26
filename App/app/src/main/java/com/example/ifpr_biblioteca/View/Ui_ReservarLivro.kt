@@ -4,7 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,22 +15,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
-import androidx.compose.material3.DividerDefaults
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.ifpr_biblioteca.R
 
 @Preview
@@ -47,104 +42,31 @@ fun ReservarLivro() {
                 .fillMaxWidth()
         ) {
             item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-
-                    Text(
-                        modifier = Modifier
-                            .width(180.dp),
-                        text = "Thinking in Java"
+                Row {
+                    Image(
+                        modifier = Modifier.size(150.dp),
+                        painter = painterResource(id = R.drawable.cover_empty_), contentDescription = ""
                     )
-
-                    Spacer(
-                        modifier = Modifier
-                            .height(20.dp)
-                    )
-
-                    Text(
-                        modifier = Modifier
-                            .width(180.dp),
-                        text = "Thinking in Java"
-                    )
+                    Column {
+                        Text(text = "O que é ética", fontWeight = FontWeight.W700)
+                        Text(text = "Alvaro L. M. valls", fontWeight = FontWeight.W400)
+                        Text(text = "Data 25 Julho de 2005", fontWeight = FontWeight.W400)
+                    }
                 }
             }
-
+            
             item {
-                Row(
+                Text(
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .width(180.dp),
-                        text = "Categoria"
-                    )
-
-                    Spacer(
-                        modifier = Modifier
-                            .height(20.dp)
-                    )
-
-                    Text(
-                        modifier = Modifier
-                            .width(180.dp),
-                        text = "Programing in java"
-                    )
-                }
-            }
-
-            item {
-                Row(
+                        .padding(top = 20.dp, start = 15.dp),
+                    text = "Descrição:", fontWeight = FontWeight.W600
+                )
+                Text(
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .width(180.dp),
-                        text = "ISBN"
-                    )
-
-                    Spacer(
-                        modifier = Modifier
-                            .height(20.dp)
-                    )
-
-                    Text(
-                        modifier = Modifier
-                            .width(180.dp),
-                        text = "4479895645"
-                    )
-                }
-            }
-
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .width(180.dp),
-                        text = "Country"
-                    )
-
-                    Spacer(
-                        modifier = Modifier
-                            .height(20.dp)
-                    )
-
-                    Text(
-                        modifier = Modifier
-                            .width(180.dp),
-                        text = "Brazil"
-                    )
-                }
+                        .padding(start = 15.dp),
+                    fontWeight = FontWeight.W400,
+                    text = "Não existe povo ou lugar que não tenha noções de bem e mal, de certo e errado. Da Grécia Antiga aos nossos dias, a ética é um conceito que sempre esteve presente em todas as sociedades. Mas apesar disso, as dúvidas são muitas. Seria a ética apenas um conjunto de convenções sociais? Teria ela um princípio supremo que atravessa toda a história da humanidade? E numa sociedade capitalista, qual a relação entre ética e lucro?"
+                )
             }
         }
 

@@ -34,6 +34,7 @@ func main() {
 	api.Post("/retornalivrospaginacao", servicos.RetornaLivrosPaginacao)
 	api.Post("/buscarlivro", servicos.BuscaLivroCodigoBarra)
 	api.Post("/buscalivrotitulo", servicos.BuscaLivroTitulo)
+	api.Post("/api", servicos.GoogleLivroApi_Isbn)
 
 	api.Post("/registrarusuario", servicos.RegistrarUsuario)
 	api.Put("/editarusuario", servicos.EditarUsuario)
