@@ -146,7 +146,7 @@ func GoogleLivroApi_Isbn(c *fiber.Ctx) error {
 		})
 	}
 
-	var apikey = "AIzaSyD5BTeDQqB-7MJQGdOnZ7BLcZCg-rGJfGQ"
+	var apikey = ""
 
 	var url = fmt.Sprintf("https://www.googleapis.com/books/v1/volumes?q=isbn:%s&key=%s", book.ISBN, apikey)
 
