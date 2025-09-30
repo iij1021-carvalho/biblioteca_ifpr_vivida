@@ -31,6 +31,17 @@ func RetornaDadosConexao() string {
 	return configuracao
 }
 
+func RetornaDadosChave() string {
+	var err = godotenv.Load("chave.env")
+
+	if err != nil {
+		log.Fatal("Não foi possivel ler o arquivo de dados" + err.Error())
+	}
+
+	chave := os.Getenv("CHAVE")
+	return chave
+}
+
 func Conexao_DataBase() {
 	var err error
 	DB, err = sql.Open("mysql", RetornaDadosConexao())

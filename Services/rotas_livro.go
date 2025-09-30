@@ -8,6 +8,8 @@ import (
 
 	"io"
 
+	conexao "meuapp/db"
+
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -136,6 +138,7 @@ func BuscaLivroCodigoBarra(c *fiber.Ctx) error {
 func GoogleLivroApi_Isbn(c *fiber.Ctx) error {
 	var api livro.GoogleApi
 	var book livro.Books
+	var book_ []livro.Books
 	var falha = c.BodyParser(&book)
 
 	if falha != nil {
@@ -146,7 +149,7 @@ func GoogleLivroApi_Isbn(c *fiber.Ctx) error {
 		})
 	}
 
-	var apikey = "AIzaSyD5BTeDQqB-7MJQGdOnZ7BLcZCg-rGJfGQ"
+	var apikey = conexao.RetornaDadosChave()
 
 	var url = fmt.Sprintf("https://www.googleapis.com/books/v1/volumes?q=isbn:%s&key=%s", book.ISBN, apikey)
 
@@ -173,10 +176,16 @@ func GoogleLivroApi_Isbn(c *fiber.Ctx) error {
 	}
 
 	if len(api.Items) > 0 {
+		book.ANO = api.Items[len(api.Items)-1].VolumeInfo.PublishedDate
+		book.DESCRICAO = api.Items[len(api.Items)-1].VolumeInfo.Description
+		book.IDIOMA = api.Items[len(api.Items)-1].VolumeInfo.Language
+
+		book_ = append(book_, book)
+
 		return c.Status(200).JSON(fiber.Map{
 			"status":  "sucess",
 			"message": "dados obtidos com sucesso",
-			"data":    api,
+			"data":    book_,
 		})
 	} else {
 		return c.Status(200).JSON(fiber.Map{

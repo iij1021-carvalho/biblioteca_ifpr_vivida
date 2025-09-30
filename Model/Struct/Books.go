@@ -12,6 +12,9 @@ type Books struct {
 	AUTOR        string `json:"AUTOR"`
 	TITULO       string `json:"TITULO"`
 	ISBN         string `json:"ISBN"`
+	DESCRICAO    string `json:"DESCRICAO"`
+	IDIOMA       string `json:"IDIOMA"`
+	ANO          string `json:"ANO"`
 }
 
 type GoogleApi struct {

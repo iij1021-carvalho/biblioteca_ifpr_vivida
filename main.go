@@ -36,6 +36,9 @@ func main() {
 	api.Post("/buscalivrotitulo", servicos.BuscaLivroTitulo)
 	api.Post("/api", servicos.GoogleLivroApi_Isbn)
 
+	api.Post("/registrarreserva", servicos.RegistrarReserva)
+	api.Put("/editarreserva", servicos.EditarReserva)
+
 	api.Post("/registrarusuario", servicos.RegistrarUsuario)
 	api.Put("/editarusuario", servicos.EditarUsuario)
 	api.Post("/deletarusuario", servicos.ExcluirUsuario)
