@@ -1,6 +1,8 @@
 package com.example.ifpr_biblioteca.View
 
+import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -31,21 +34,26 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.ifpr_biblioteca.Data.Books_Paginacao
 import com.example.ifpr_biblioteca.Data.Dt_Book
+import com.example.ifpr_biblioteca.Data.LivroUiState
 import com.example.ifpr_biblioteca.Model.Viewmodel.ViewModel_Livro
 
 @Composable
 fun ListaLivros(navController: NavController, viewmodelLivro: ViewModel_Livro) {
     var texto by remember { mutableStateOf("") }
     val listaLivros by viewmodelLivro.livro.collectAsState()
+    val next by viewmodelLivro.next.collectAsState()
     val listState = rememberLazyListState()
+    val uiState by viewmodelLivro.uiState.collectAsState()
 
     Box(
         modifier = Modifier
@@ -59,7 +67,7 @@ fun ListaLivros(navController: NavController, viewmodelLivro: ViewModel_Livro) {
         ) {
             item {
                 Row {
-                    RenderizaMenu1()
+                    RenderizaMenu(navController)
                     OutlinedTextField(
                         modifier = Modifier
                             .width(320.dp),
@@ -95,24 +103,39 @@ fun ListaLivros(navController: NavController, viewmodelLivro: ViewModel_Livro) {
             }
 
             items(listaLivros.chunked(2)) { livro ->
-                LivrosDisponiveis(livro)
+                if(livro.size > 1) {
+                    LivrosDisponiveis(livro, viewmodelLivro)
+                }
+            }
+        }
+
+        if (next) {
+            Loading(viewmodelLivro)
+        }
+
+        if (texto.isEmpty() && !next) {
+            LaunchedEffect(listState) {
+                snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+                    .collect { lastVisibleItemIndex ->
+                        if (lastVisibleItemIndex != null && lastVisibleItemIndex == listState.layoutInfo.totalItemsCount - 1) {
+                            viewmodelLivro.retornalivros(
+                                Books_Paginacao(
+                                    INICIAL = listaLivros.size,
+                                    FINAL = 10
+                                )
+                            )
+                        }
+                    }
             }
         }
     }
 
-    if (texto.isEmpty()) {
-        LaunchedEffect(listState) {
-            snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
-                .collect { lastVisibleItemIndex ->
-                    if (lastVisibleItemIndex != null && lastVisibleItemIndex == listState.layoutInfo.totalItemsCount - 1) {
-                        viewmodelLivro.retornalivros(
-                            Books_Paginacao(
-                                INICIAL = listaLivros.size,
-                                FINAL = 20
-                            )
-                        )
-                    }
-                }
+    LaunchedEffect(uiState) {
+        if (uiState is LivroUiState.Sucess) {
+            navController.navigate("ReservarLivro")
+            viewmodelLivro.ResetUi()
+        } else if (uiState is LivroUiState.Erro) {
+            viewmodelLivro.ResetNext()
         }
     }
 }
@@ -152,7 +175,7 @@ fun LivrosAdicionadosRecentemente(viewmodelLivro: ViewModel_Livro, Dtlivro: List
 }
 
 @Composable
-fun LivrosDisponiveis(livro: List<Dt_Book>) {
+fun LivrosDisponiveis(livro: List<Dt_Book>, viewmodelLivro: ViewModel_Livro) {
     Row(
         modifier = Modifier
             .padding(5.dp)
@@ -170,6 +193,10 @@ fun LivrosDisponiveis(livro: List<Dt_Book>) {
                     .width(180.dp)
                     .padding(end = 5.dp, start = 5.dp)
                     .height(135.dp)
+                    .clickable() {
+                        viewmodelLivro.BuscaLivroGoogle(livro)
+                        viewmodelLivro.HabilitaNext()
+                    }
             ) {
                 Column(modifier = Modifier.padding(10.dp)) {
                     Text(
@@ -179,6 +206,28 @@ fun LivrosDisponiveis(livro: List<Dt_Book>) {
                     Text("Autor: ${livro.AUTOR}", color = Color.Gray, fontSize = 11.sp)
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun Loading(viewmodelLivro: ViewModel_Livro) {
+    val uiState by viewmodelLivro.uiState.collectAsState()
+    val context = LocalContext.current
+
+    if (uiState is LivroUiState.Loading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(
+                color = Color.Black,
+                strokeWidth = 4.dp
+            )
+        }
+    } else {
+        if (uiState is LivroUiState.Erro) {
+            Toast.makeText(context, "Falha ao localizar informações do livro", Toast.LENGTH_SHORT).show()
         }
     }
 }

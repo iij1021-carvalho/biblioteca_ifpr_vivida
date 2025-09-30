@@ -17,7 +17,6 @@ class viewmodel_inventario(private val api_rotas: Api = Api()) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = api_rotas.api.buscarlivroQrCode(book)
-
                 if (response.isSuccessful) {
                     _livro.value = _livro.value + response.body()?.data!!
                 } else {
@@ -32,7 +31,7 @@ class viewmodel_inventario(private val api_rotas: Api = Api()) : ViewModel() {
     fun AtualizarQuantidade(idlivro: Int, qtd: Int) {
         _livro.update { current ->
             current.map {
-                if (it.IDBOOK == idlivro) {
+                if (it.ID_BOOK == idlivro) {
                     it.copy(QUANTIDADE = qtd)
                 } else {
                     it

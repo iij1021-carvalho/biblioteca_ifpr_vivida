@@ -17,8 +17,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -174,7 +172,7 @@ fun BookListScreen(navController: NavController, viewmodelinventario: viewmodel_
                                                     .size(25.dp),
                                                 onClick = {
                                                     quantidade--
-                                                    viewmodelinventario.AtualizarQuantidade(book.IDBOOK, quantidade)
+                                                    viewmodelinventario.AtualizarQuantidade(book.ID_BOOK, quantidade)
                                                 }) {
                                                 Icon(
                                                     painter = painterResource(id = R.drawable.sinal_menos),
@@ -190,7 +188,7 @@ fun BookListScreen(navController: NavController, viewmodelinventario: viewmodel_
 
                                             IconButton(onClick = {
                                                 quantidade++
-                                                viewmodelinventario.AtualizarQuantidade(book.IDBOOK, quantidade)
+                                                viewmodelinventario.AtualizarQuantidade(book.ID_BOOK, quantidade)
                                             }) {
                                                 Icon(
                                                     painter = painterResource(id = R.drawable.sinal_mais),

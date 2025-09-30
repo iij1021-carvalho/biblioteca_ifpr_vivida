@@ -4,6 +4,7 @@ import com.example.ifpr_biblioteca.Data.Books_Paginacao
 import com.example.ifpr_biblioteca.Data.Dt_Categoria
 import com.example.ifpr_biblioteca.Data.Dt_CategoriaResponse
 import com.example.ifpr_biblioteca.Data.Dt_Book
+import com.example.ifpr_biblioteca.Data.Dt_LivroReservado
 import com.example.ifpr_biblioteca.Data.Dt_LivrosResponse
 import com.example.ifpr_biblioteca.Data.Dt_Usuario
 import com.example.ifpr_biblioteca.Data.Dt_UsuarioResponse
@@ -25,8 +26,17 @@ interface Rotas {
     @POST("retornalivrospaginacao")
     suspend fun retornalivropaginacao(@Body books: Books_Paginacao): retrofit2.Response<Dt_LivrosResponse>
 
+    @POST("registrarreserva")
+    suspend fun registrarreserva(@Body books: Dt_LivroReservado): retrofit2.Response<Dt_LivroReservado>
+
+    @PUT("editarreserva")
+    suspend fun editarreserva(@Body books: Dt_LivroReservado): retrofit2.Response<Dt_LivroReservado>
+
     @POST("buscalivrotitulo")
     suspend fun buscalivroTitulo(@Body books: Dt_Book): retrofit2.Response<Dt_LivrosResponse>
+
+    @POST("api")
+    suspend fun BuscaLivroGoogle(@Body books: Dt_Book): retrofit2.Response<Dt_LivrosResponse>
 
     @POST("buscarlivro")
     suspend fun buscarlivroQrCode(@Body books: Dt_Book): retrofit2.Response<Dt_LivrosResponse>

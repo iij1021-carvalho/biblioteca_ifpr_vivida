@@ -7,22 +7,16 @@ data class Dt_Menu(
 fun RetornaMenu(): List<Dt_Menu> {
     var lista = listOf(
         Dt_Menu(
-            descricao = "Categorias"
-        ),
-        Dt_Menu(
-            descricao = "Meus livros"
-        ),
-        Dt_Menu(
-            descricao = "Livros"
+            descricao = "Listar livros"
         ),
         Dt_Menu(
             descricao = "Cadastrar livro"
         ),
         Dt_Menu(
-            descricao = "Inventario"
+            descricao = "Registrar Inventario"
         ),
         Dt_Menu(
-            descricao = "Registrar localizacao"
+            descricao = "Livros Reservados"
         )
     )
     return lista

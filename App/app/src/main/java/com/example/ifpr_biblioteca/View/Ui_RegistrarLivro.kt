@@ -46,6 +46,18 @@ fun RegistrarLivro(navController: NavController, viewmodelivro: ViewModel_Livro)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Image(
+                modifier = Modifier
+                    .padding(top = 15.dp)
+                    .size(300.dp),
+                painter = painterResource(id = R.drawable.cover_empty_), contentDescription = ""
+            )
+
+            Spacer(
+                modifier = Modifier
+                    .height(5.dp)
+            )
+
             OutlinedTextField(
                 modifier = Modifier
                     .width(370.dp),
@@ -93,34 +105,6 @@ fun RegistrarLivro(navController: NavController, viewmodelivro: ViewModel_Livro)
 
                 },
                 label = { Text("QrCode:") }
-            )
-
-            Spacer(
-                modifier = Modifier
-                    .height(5.dp)
-            )
-
-            OutlinedTextField(
-                modifier = Modifier
-                    .width(370.dp),
-                value = "",
-                onValueChange = {
-
-                },
-                label = { Text("Categoria:") }
-            )
-
-            Image(
-                modifier = Modifier
-                    .padding(top = 15.dp)
-                    .size(300.dp),
-                painter = painterResource(id = R.drawable.ic_biblioteca_background),
-                contentDescription = ""
-            )
-
-            Spacer(
-                modifier = Modifier
-                    .height(5.dp)
             )
         }
     }

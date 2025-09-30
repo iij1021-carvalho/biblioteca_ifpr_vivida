@@ -43,8 +43,13 @@ fun RenderizaMenu(navController: NavController) {
                     if(it.descricao == "Cadastrar livro"){
                         navController.navigate("registrarlivro")
                     }
-                    if(it.descricao == "Inventario"){
+
+                    if(it.descricao == "Registrar Inventario"){
                         navController.navigate("Inventario")
+                    }
+
+                    if(it.descricao == "Listar livros"){
+                        navController.navigate("ListaLivros")
                     }
                 }
             )

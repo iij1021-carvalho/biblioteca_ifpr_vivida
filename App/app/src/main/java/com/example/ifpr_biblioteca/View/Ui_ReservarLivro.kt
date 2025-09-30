@@ -1,36 +1,45 @@
 package com.example.ifpr_biblioteca.View
 
+import android.os.Build
+import androidx.activity.compose.BackHandler
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.ifpr_biblioteca.Data.Dt_LivroReservado
+import com.example.ifpr_biblioteca.Data.ReservadoUiState
+import com.example.ifpr_biblioteca.Model.Viewmodel.ViewModel_Livro
 import com.example.ifpr_biblioteca.R
+import java.time.LocalDateTime
 
-@Preview
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ReservarLivro() {
+fun ReservarLivro(navController: NavController, livroViewModel: ViewModel_Livro) {
+    val listaLivros by livroViewModel.livro.collectAsState()
+    val uiState_ by livroViewModel.uiState_.collectAsState()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -41,21 +50,21 @@ fun ReservarLivro() {
                 .padding(top = 50.dp)
                 .fillMaxWidth()
         ) {
-            item {
+            items(listaLivros) { livro ->
                 Row {
                     Image(
                         modifier = Modifier.size(150.dp),
                         painter = painterResource(id = R.drawable.cover_empty_), contentDescription = ""
                     )
                     Column {
-                        Text(text = "O que é ética", fontWeight = FontWeight.W700)
-                        Text(text = "Alvaro L. M. valls", fontWeight = FontWeight.W400)
-                        Text(text = "Data 25 Julho de 2005", fontWeight = FontWeight.W400)
+                        Text(text = livro.TITULO, fontWeight = FontWeight.W700)
+                        Text(text = livro.AUTOR, fontWeight = FontWeight.W400)
+                        Text(text = livro.ANO, fontWeight = FontWeight.W400)
                     }
                 }
             }
-            
-            item {
+
+            items(listaLivros) { livro ->
                 Text(
                     modifier = Modifier
                         .padding(top = 20.dp, start = 15.dp),
@@ -65,19 +74,39 @@ fun ReservarLivro() {
                     modifier = Modifier
                         .padding(start = 15.dp),
                     fontWeight = FontWeight.W400,
-                    text = "Não existe povo ou lugar que não tenha noções de bem e mal, de certo e errado. Da Grécia Antiga aos nossos dias, a ética é um conceito que sempre esteve presente em todas as sociedades. Mas apesar disso, as dúvidas são muitas. Seria a ética apenas um conjunto de convenções sociais? Teria ela um princípio supremo que atravessa toda a história da humanidade? E numa sociedade capitalista, qual a relação entre ética e lucro?"
+                    text = livro.DESCRICAO
                 )
             }
         }
 
         Button(
             modifier = Modifier
-                .padding(bottom = 10.dp)
+                .padding(bottom = 25.dp)
                 .align(Alignment.BottomCenter)
                 .width(180.dp),
-            onClick = {}
+            onClick = {
+                val reservado = Dt_LivroReservado(
+                    IDLIVRO = listaLivros.firstOrNull()?.ID_BOOK ?: 0,
+                    IDUSUARIO = 1,
+                    DATA_RESERVADO = LocalDateTime.now().toString(),
+                    DATA_DEVOLUCAO = "29/09/2025"
+                )
+                livroViewModel.OperacaoCrud(reservado)
+            }
         ) {
             Text("Reservar:", fontWeight = FontWeight.W700)
+        }
+    }
+
+    BackHandler {
+        livroViewModel.ResetNext()
+        navController.popBackStack()
+    }
+
+    LaunchedEffect(uiState_) {
+        if (uiState_ is ReservadoUiState.Sucesso) {
+            livroViewModel.ResetNext()
+            navController.popBackStack()
         }
     }
 }
