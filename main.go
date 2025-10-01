@@ -38,6 +38,7 @@ func main() {
 
 	api.Post("/registrarreserva", servicos.RegistrarReserva)
 	api.Put("/editarreserva", servicos.EditarReserva)
+	api.Post("/listalivroreservado", servicos.ListaLivroReservado)
 
 	api.Post("/registrarusuario", servicos.RegistrarUsuario)
 	api.Put("/editarusuario", servicos.EditarUsuario)

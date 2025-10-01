@@ -10,6 +10,54 @@ type Livro_Reservado struct {
 	IDUSUARIO      int    `json:"IDUSUARIO"`
 	DATA_RESERVADO string `json:"DATA_RESERVADO"`
 	DATA_DEVOLUCAO string `json:"DATA_DEVOLUCAO"`
+	AUTOR          string `json:"AUTOR"`
+	TITULO         string `json:"TITULO"`
+	ISBN           string `json:"ISBN"`
+	CODIGO_BARRA   string `json:"CODIGO_BARRA"`
+}
+
+func (reservado Livro_Reservado) ListaLivroReservado() ([]Livro_Reservado, error) {
+	var livro_reservado_ []Livro_Reservado
+	db := conexao.DB
+
+	var resultado, erro = db.Query(`
+		 SELECT IDRESERVA,
+				IDUSUARIO,
+				IDLIVRO,
+				AUTOR,
+				TITULO,
+				ISBN,
+				CODIGO_BARRA,
+				DATA_RESERVADO,
+				DATA_DEVOLUCAO
+		   FROM LIVRO_RESERVADO
+		   LEFT JOIN BOOK 
+				  ON BOOK.ID_BOOK = LIVRO_RESERVADO.IDLIVRO
+		  WHERE IDUSUARIO = ?`, reservado.IDUSUARIO)
+
+	if erro != nil {
+		return livro_reservado_, erro
+	}
+
+	for resultado.Next() {
+		var erro = resultado.Scan(
+			&reservado.IDRESERVA,
+			&reservado.IDUSUARIO,
+			&reservado.IDLIVRO,
+			&reservado.AUTOR,
+			&reservado.TITULO,
+			&reservado.ISBN,
+			&reservado.CODIGO_BARRA,
+			&reservado.DATA_RESERVADO,
+			&reservado.DATA_DEVOLUCAO)
+
+		if erro != nil {
+			return livro_reservado_, erro
+		}
+
+		livro_reservado_ = append(livro_reservado_, reservado)
+	}
+	return livro_reservado_, nil
 }
 
 func (reservado Livro_Reservado) RegistrarReserva() error {

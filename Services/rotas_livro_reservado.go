@@ -35,6 +35,35 @@ func RegistrarReserva(c *fiber.Ctx) error {
 	})
 }
 
+func ListaLivroReservado(c *fiber.Ctx) error {
+	var reservado reservado.Livro_Reservado
+	var falha = c.BodyParser(&reservado)
+
+	if falha != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "falha",
+			"message": "falha ao obter dados",
+			"details": falha.Error(),
+		})
+	}
+
+	var resultado, erro = reservado.ListaLivroReservado()
+
+	if erro != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "falha",
+			"message": "falha ao obter dados",
+			"details": erro.Error(),
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"status":  "sucesso",
+		"message": "dados obtidos com sucesso",
+		"data":    resultado,
+	})
+}
+
 func EditarReserva(c *fiber.Ctx) error {
 	var reservado reservado.Livro_Reservado
 	var falha = c.BodyParser(&reservado)

@@ -17,7 +17,8 @@ func (usuario Usuario) EfectuarEntradaUsuario() ([]Usuario, error) {
 	var usuario_ []Usuario
 
 	var resultado, erro = db.Query(
-		`SELECT NOME_USUARIO,
+		`SELECT ID_USUARIO,
+				NOME_USUARIO,
         	    SENHA_USUARIO,
                 EMAIL_USUARIO
 		   FROM USUARIO
@@ -32,6 +33,7 @@ func (usuario Usuario) EfectuarEntradaUsuario() ([]Usuario, error) {
 
 	for resultado.Next() {
 		erro = resultado.Scan(
+			&usuario.ID_USUARIO,
 			&usuario.NOME_USUARIO,
 			&usuario.SENHA_USUARIO,
 			&usuario.EMAIL_USUARIO)
