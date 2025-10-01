@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 class ViewModel_Livro(private val api_rotas: Api = Api()) : ViewModel() {
     private val _uiState = MutableStateFlow<LivroUiState>(LivroUiState.Idle)
     val uiState: StateFlow<LivroUiState> = _uiState
+
     private var _livro = MutableStateFlow<List<Dt_Book>>(emptyList())
     val livro: StateFlow<List<Dt_Book>> = _livro
 
@@ -31,20 +32,26 @@ class ViewModel_Livro(private val api_rotas: Api = Api()) : ViewModel() {
             _uiState.value = LivroUiState.Loading
             try {
                 when (livro_operacao) {
-                    is LivroOperacao.Novo -> api_rotas.api.registrarlivros(livro_operacao.livro).isSuccessful
-                    is LivroOperacao.Editar -> api_rotas.api.editarlivro(livro_operacao.livro).isSuccessful
-                    is LivroOperacao.Excluir -> api_rotas.api.deletarlivro(livro_operacao.livro).isSuccessful
+                    is LivroOperacao.Novo -> {
+                        api_rotas.api.registrarlivros(livro_operacao.livro).isSuccessful
+                        LivroUiState.Sucess()
+                    }
+
+                    is LivroOperacao.Editar -> {
+                        api_rotas.api.editarlivro(livro_operacao.livro).isSuccessful
+                        LivroUiState.Sucess()
+                    }
+
+                    is LivroOperacao.Excluir -> {
+                        api_rotas.api.deletarlivro(livro_operacao.livro).isSuccessful
+                        LivroUiState.Sucess()
+                    }
+
                     else -> {}
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                false
-            }
-
-            _uiState.value = if (true) {
-                LivroUiState.Sucess()
-            } else {
-                LivroUiState.Erro("falha ao executar")
+                LivroUiState.Erro("Erro ${e.message}")
             }
         }
     }

@@ -11,10 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -70,7 +68,7 @@ fun ListaLivros(navController: NavController, viewmodelLivro: ViewModel_Livro) {
                     RenderizaMenu(navController)
                     OutlinedTextField(
                         modifier = Modifier
-                            .width(320.dp),
+                            .width(350.dp),
                         value = texto,
                         leadingIcon = {
                             Icon(Icons.Default.Search, contentDescription = "")
@@ -89,12 +87,6 @@ fun ListaLivros(navController: NavController, viewmodelLivro: ViewModel_Livro) {
             }
 
             item {
-                Text(
-                    modifier = Modifier
-                        .padding(start = 15.dp, top = 10.dp, bottom = 10.dp),
-                    text = "Adicionados recentemente", fontWeight = FontWeight.W700
-                )
-
                 Text(
                     modifier = Modifier
                         .padding(start = 15.dp, top = 10.dp, bottom = 10.dp),
@@ -121,7 +113,7 @@ fun ListaLivros(navController: NavController, viewmodelLivro: ViewModel_Livro) {
                             viewmodelLivro.retornalivros(
                                 Books_Paginacao(
                                     INICIAL = listaLivros.size,
-                                    FINAL = 10
+                                    FINAL = 30
                                 )
                             )
                         }
@@ -136,40 +128,6 @@ fun ListaLivros(navController: NavController, viewmodelLivro: ViewModel_Livro) {
             viewmodelLivro.ResetUi()
         } else if (uiState is LivroUiState.Erro) {
             viewmodelLivro.ResetNext()
-        }
-    }
-}
-
-@Composable
-fun LivrosAdicionadosRecentemente(viewmodelLivro: ViewModel_Livro, Dtlivro: List<Dt_Book>) {
-    val listState = rememberLazyListState()
-    LazyRow(
-        state = listState,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        items(Dtlivro) { livro ->
-            Card(
-                elevation = CardDefaults.cardElevation(2.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                ),
-                modifier = Modifier
-                    .padding(end = 5.dp, start = 5.dp)
-                    .size(width = 150.dp, height = 135.dp)
-            ) {
-                Column {
-                    Text(
-                        modifier = Modifier
-                            .padding(start = 5.dp, end = 5.dp),
-                        text = livro.TITULO, fontWeight = FontWeight.W600,
-                        fontSize = 12.sp,
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
-            }
         }
     }
 }

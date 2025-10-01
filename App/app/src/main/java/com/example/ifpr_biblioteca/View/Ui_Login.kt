@@ -24,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.ifpr_biblioteca.Data.Dt_Usuario
 import com.example.ifpr_biblioteca.Data.UsuarioOperacao
@@ -118,7 +120,7 @@ fun EntradaUsuario(navController: NavController, viewModelUsuario: ViewModelUsua
                     viewModelUsuario.executarOperacao(
                         UsuarioOperacao.Entrar(
                             Dt_Usuario(
-                                NOME_USUARIO = "fabio", SENHA_USUARIO = "1021"
+                                NOME_USUARIO = usuario, SENHA_USUARIO = senha
                             )
                         )
                     )
@@ -132,11 +134,13 @@ fun EntradaUsuario(navController: NavController, viewModelUsuario: ViewModelUsua
 
             when (uiState) {
                 is UsuarioUiState.Sucess -> {
-                    Text("✅ ${(uiState as UsuarioUiState.Sucess).message}")
                     navController.navigate("ListaLivros")
                 }
 
-                is UsuarioUiState.Erro -> Text("✅ ${(uiState as UsuarioUiState.Erro).erro}")
+                is UsuarioUiState.Erro -> {
+                    Text("Erro ao tentar se conectar:")
+                }
+
                 else -> {}
             }
 
@@ -156,7 +160,8 @@ fun EntradaUsuario(navController: NavController, viewModelUsuario: ViewModelUsua
 
             Row {
                 Text(
-                    text = "Você ainda não possui uma conta?"
+                    text = "Você ainda não possui uma conta?",
+                    fontSize = 10.sp,
                 )
 
                 Text(
@@ -167,6 +172,7 @@ fun EntradaUsuario(navController: NavController, viewModelUsuario: ViewModelUsua
                         },
                     text = "Crie uma agora",
                     fontWeight = FontWeight.Bold,
+                    fontSize = 10.sp,
                     textDecoration = TextDecoration.Underline
                 )
             }

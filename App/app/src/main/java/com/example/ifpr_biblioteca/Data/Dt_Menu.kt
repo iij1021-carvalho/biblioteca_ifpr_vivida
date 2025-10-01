@@ -3,7 +3,6 @@ package com.example.ifpr_biblioteca.Data
 data class Dt_Menu(
     val descricao: String
 )
-
 fun RetornaMenu(): List<Dt_Menu> {
     var lista = listOf(
         Dt_Menu(

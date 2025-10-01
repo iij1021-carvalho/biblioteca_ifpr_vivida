@@ -18,6 +18,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,6 +37,9 @@ import com.example.ifpr_biblioteca.R
 @Composable
 fun RegistrarLivro(navController: NavController, viewmodelivro: ViewModel_Livro) {
     val uiState by viewmodelivro.uiState.collectAsState()
+    var autor by remember { mutableStateOf("") }
+    var titulo by remember { mutableStateOf("") }
+    var ano by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier
@@ -61,8 +67,10 @@ fun RegistrarLivro(navController: NavController, viewmodelivro: ViewModel_Livro)
             OutlinedTextField(
                 modifier = Modifier
                     .width(370.dp),
-                value = "",
-                onValueChange = {},
+                value = titulo,
+                onValueChange = {
+                    titulo = it
+                },
                 label = { Text("Titulo:") }
             )
 
@@ -74,8 +82,10 @@ fun RegistrarLivro(navController: NavController, viewmodelivro: ViewModel_Livro)
             OutlinedTextField(
                 modifier = Modifier
                     .width(370.dp),
-                value = "",
-                onValueChange = {},
+                value = autor,
+                onValueChange = {
+                    autor = it
+                },
                 label = { Text("Autor:") }
             )
 
@@ -87,24 +97,16 @@ fun RegistrarLivro(navController: NavController, viewmodelivro: ViewModel_Livro)
             OutlinedTextField(
                 modifier = Modifier
                     .width(370.dp),
-                value = "",
-                onValueChange = {},
+                value = ano,
+                onValueChange = {
+                    ano = it
+                },
                 label = { Text("Ano:") }
             )
 
             Spacer(
                 modifier = Modifier
                     .height(5.dp)
-            )
-
-            OutlinedTextField(
-                modifier = Modifier
-                    .width(370.dp),
-                value = "",
-                onValueChange = {
-
-                },
-                label = { Text("QrCode:") }
             )
         }
     }
@@ -119,14 +121,15 @@ fun RegistrarLivro(navController: NavController, viewmodelivro: ViewModel_Livro)
                 .padding(bottom = 25.dp)
                 .width(320.dp),
             onClick = {
-                val booksList =
-                    Dt_Book(
-                        AUTOR = "Clean Code",
-                        TITULO = "Clean Code programação",
-                        ISBN = "012454545",
-                        IDCATEGORIA = 869
+                viewmodelivro.executarOperacao(
+                    Novo(
+                        Dt_Book(
+                            AUTOR = autor,
+                            TITULO = titulo,
+                            ANO = ano
+                        )
                     )
-                viewmodelivro.executarOperacao(Novo(booksList))
+                )
             }
         ) {
             if (uiState is LivroUiState.Loading) {

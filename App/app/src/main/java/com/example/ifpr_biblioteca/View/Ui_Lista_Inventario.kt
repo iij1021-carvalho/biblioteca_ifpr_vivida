@@ -20,11 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.ifpr_biblioteca.Data.Dt_Book
 import com.example.ifpr_biblioteca.Model.Viewmodel.viewmodel_inventario
 
 @Composable

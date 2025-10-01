@@ -30,15 +30,17 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.ifpr_biblioteca.Data.Dt_LivroReservado
 import com.example.ifpr_biblioteca.Data.ReservadoUiState
+import com.example.ifpr_biblioteca.Model.Viewmodel.ViewModelUsuario
 import com.example.ifpr_biblioteca.Model.Viewmodel.ViewModel_Livro
 import com.example.ifpr_biblioteca.R
 import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ReservarLivro(navController: NavController, livroViewModel: ViewModel_Livro) {
+fun ReservarLivro(navController: NavController, livroViewModel: ViewModel_Livro, usuarioViewModel: ViewModelUsuario) {
     val listaLivros by livroViewModel.livro.collectAsState()
     val uiState_ by livroViewModel.uiState_.collectAsState()
+    val idusuario by usuarioViewModel.iduser.collectAsState()
 
     Box(
         modifier = Modifier
@@ -87,7 +89,7 @@ fun ReservarLivro(navController: NavController, livroViewModel: ViewModel_Livro)
             onClick = {
                 val reservado = Dt_LivroReservado(
                     IDLIVRO = listaLivros.firstOrNull()?.ID_BOOK ?: 0,
-                    IDUSUARIO = 1,
+                    IDUSUARIO = idusuario,
                     DATA_RESERVADO = LocalDateTime.now().toString(),
                     DATA_DEVOLUCAO = "29/09/2025"
                 )

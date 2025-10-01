@@ -1,10 +1,9 @@
 package com.example.ifpr_biblioteca.Model.Viewmodel
 
 import com.example.ifpr_biblioteca.Data.Books_Paginacao
-import com.example.ifpr_biblioteca.Data.Dt_Categoria
-import com.example.ifpr_biblioteca.Data.Dt_CategoriaResponse
 import com.example.ifpr_biblioteca.Data.Dt_Book
 import com.example.ifpr_biblioteca.Data.Dt_LivroReservado
+import com.example.ifpr_biblioteca.Data.Dt_LivroReservadoResponse
 import com.example.ifpr_biblioteca.Data.Dt_LivrosResponse
 import com.example.ifpr_biblioteca.Data.Dt_Usuario
 import com.example.ifpr_biblioteca.Data.Dt_UsuarioResponse
@@ -38,6 +37,9 @@ interface Rotas {
     @POST("api")
     suspend fun BuscaLivroGoogle(@Body books: Dt_Book): retrofit2.Response<Dt_LivrosResponse>
 
+    @POST("listalivroreservado")
+    suspend fun Listalivroreservado(@Body books: Dt_LivroReservado): retrofit2.Response<Dt_LivroReservadoResponse>
+
     @POST("buscarlivro")
     suspend fun buscarlivroQrCode(@Body books: Dt_Book): retrofit2.Response<Dt_LivrosResponse>
 
@@ -56,15 +58,4 @@ interface Rotas {
     @GET("retornatodosusuario")
     suspend fun retornatodosusuario(): retrofit2.Response<Dt_UsuarioResponse>
 
-    @POST("registrarcategoria")
-    suspend fun registrarcategoria(@Body categoria: Dt_Categoria): retrofit2.Response<Dt_Categoria>
-
-    @PUT("editarcategoria")
-    suspend fun editarcategoria(@Body categoria: Dt_Categoria): retrofit2.Response<Dt_Categoria>
-
-    @POST("deletarcategoria")
-    suspend fun deletarcategoria(@Body categoria: Dt_Categoria): retrofit2.Response<Dt_Categoria>
-
-    @GET("retornartodascategoria")
-    suspend fun retornatodascategoria(): retrofit2.Response<Dt_CategoriaResponse>
 }

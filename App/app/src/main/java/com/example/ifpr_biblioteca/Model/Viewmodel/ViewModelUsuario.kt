@@ -10,31 +10,39 @@ import kotlinx.coroutines.launch
 
 class ViewModelUsuario(private val api_rotas: Api = Api()) : ViewModel() {
     private val _uistate = MutableStateFlow<UsuarioUiState>(UsuarioUiState.Idle)
+    private var _iduser: MutableStateFlow<Int> = MutableStateFlow(0)
     val uiState: StateFlow<UsuarioUiState> = _uistate
+    val iduser: StateFlow<Int> = _iduser
 
     fun executarOperacao(usuario_operacao: UsuarioOperacao) {
         viewModelScope.launch {
             _uistate.value = UsuarioUiState.Loading
-
-            val resultado = try {
+            try {
                 when (usuario_operacao) {
-                    is UsuarioOperacao.Novo -> api_rotas.api.registrarusuario(usuario_operacao.usuario).isSuccessful
-                    is UsuarioOperacao.Excluir -> api_rotas.api.deletarusuario(usuario_operacao.usuario).isSuccessful
-                    is UsuarioOperacao.Editar -> api_rotas.api.editarusuario(usuario_operacao.usuario).isSuccessful
-                    is UsuarioOperacao.Entrar -> api_rotas.api.efectuarentradausuario(usuario_operacao.usuario).isSuccessful
-                    else -> {
-                        false
+                    is UsuarioOperacao.Novo -> {
+                        api_rotas.api.registrarusuario(usuario_operacao.usuario).isSuccessful
+                        _uistate.value = UsuarioUiState.Sucess("Dados registrados com sucesso")
+                    }
+
+                    is UsuarioOperacao.Excluir -> {
+                        api_rotas.api.deletarusuario(usuario_operacao.usuario).isSuccessful
+                        _uistate.value = UsuarioUiState.Sucess("Dados deletados com sucesso")
+                    }
+
+                    is UsuarioOperacao.Editar -> {
+                        api_rotas.api.editarusuario(usuario_operacao.usuario).isSuccessful
+                        _uistate.value = UsuarioUiState.Sucess("Dados editados com sucesso")
+                    }
+
+                    is UsuarioOperacao.Entrar -> {
+                        val response = api_rotas.api.efectuarentradausuario(usuario_operacao.usuario).body()
+                        _iduser.value = response?.data?.firstOrNull()?.ID_USUARIO!!
+                        _uistate.value = UsuarioUiState.Sucess("Dados obtidos com sucesso")
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                false
-            }
-
-            _uistate.value = if (resultado) {
-                UsuarioUiState.Sucess()
-            } else {
-                UsuarioUiState.Erro("falha ao executar operacao")
+                _uistate.value = UsuarioUiState.Erro("Falha")
             }
         }
     }

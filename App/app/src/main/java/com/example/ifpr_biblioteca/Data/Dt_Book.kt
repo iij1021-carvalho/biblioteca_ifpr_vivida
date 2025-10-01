@@ -23,7 +23,6 @@ data class Dt_LivrosResponse(
     val message: String,
     val data: List<Dt_Book>
 )
-
 data class Books_Paginacao(
     val INICIAL: Int = 0,
     val FINAL: Int = 0

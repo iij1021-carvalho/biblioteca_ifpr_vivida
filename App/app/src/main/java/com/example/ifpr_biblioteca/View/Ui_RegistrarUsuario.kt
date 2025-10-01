@@ -42,7 +42,6 @@ fun RegistrarUsuario(navController: NavController, viewModelUsuario: ViewModelUs
     var usuario by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
-    var data_nascimento by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier
