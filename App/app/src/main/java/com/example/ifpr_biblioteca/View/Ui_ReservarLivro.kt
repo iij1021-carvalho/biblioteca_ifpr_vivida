@@ -92,7 +92,8 @@ fun ReservarLivro(navController: NavController, livroViewModel: ViewModel_Livro,
             items(listaLivros) { livro ->
                 Text(
                     modifier = Modifier
-                        .padding(top = 20.dp, start = 15.dp),
+                        .fillMaxSize()
+                        .padding(top = 20.dp, start = 15.dp, bottom = 50.dp),
                     text = "Descrição:", fontWeight = FontWeight.W600
                 )
                 Text(
