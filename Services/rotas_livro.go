@@ -179,6 +179,7 @@ func GoogleLivroApi_Isbn(c *fiber.Ctx) error {
 		book.ANO = api.Items[len(api.Items)-1].VolumeInfo.PublishedDate
 		book.DESCRICAO = api.Items[len(api.Items)-1].VolumeInfo.Description
 		book.IDIOMA = api.Items[len(api.Items)-1].VolumeInfo.Language
+		book.CAPA = api.Items[len(api.Items)-1].VolumeInfo.ImageLinks.Thumbnail
 
 		book_ = append(book_, book)
 

@@ -11,19 +11,15 @@ import com.example.ifpr_biblioteca.Data.ReservadoUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 class ViewModel_Livro(private val api_rotas: Api = Api()) : ViewModel() {
     private val _uiState = MutableStateFlow<LivroUiState>(LivroUiState.Idle)
     val uiState: StateFlow<LivroUiState> = _uiState
-
     private var _livro = MutableStateFlow<List<Dt_Book>>(emptyList())
     val livro: StateFlow<List<Dt_Book>> = _livro
-
     private var _next: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val next: StateFlow<Boolean> = _next
-
     private val _uiState_ = MutableStateFlow<ReservadoUiState>(ReservadoUiState.idle)
     val uiState_: StateFlow<ReservadoUiState> = _uiState_
 
@@ -112,12 +108,12 @@ class ViewModel_Livro(private val api_rotas: Api = Api()) : ViewModel() {
     }
 
     fun ResetNext() {
-        _next.value = false;
+        _next.value = false
     }
 
 
     fun HabilitaNext() {
-        _next.value = true;
+        _next.value = true
     }
 
     fun OperacaoCrud(reservado: Dt_LivroReservado) {
@@ -127,14 +123,14 @@ class ViewModel_Livro(private val api_rotas: Api = Api()) : ViewModel() {
                 val resultado = api_rotas.api.registrarreserva(reservado)
                 if (resultado.isSuccessful) {
                     _uiState_.value = ReservadoUiState.Sucesso("Reserva registrada:")
-                    _next.value = true;
+                    _next.value = true
                 } else {
                     _uiState_.value = ReservadoUiState.Erro("")
-                    _next.value = false;
+                    _next.value = false
                 }
             } catch (e: Exception) {
                 _uiState_.value = ReservadoUiState.Erro("")
-                _next.value = false;
+                _next.value = false
                 e.printStackTrace()
             }
         }

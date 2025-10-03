@@ -15,6 +15,7 @@ type Books struct {
 	DESCRICAO    string `json:"DESCRICAO"`
 	IDIOMA       string `json:"IDIOMA"`
 	ANO          string `json:"ANO"`
+	CAPA         string `json:"CAPA"`
 }
 
 type GoogleApi struct {
@@ -28,6 +29,7 @@ type GoogleApi struct {
 		VolumeInfo struct {
 			Title               string   `json:"title"`
 			Authors             []string `json:"authors"`
+			Publisher           string   `json:"publisher"`
 			PublishedDate       string   `json:"publishedDate"`
 			Description         string   `json:"description"`
 			IndustryIdentifiers []struct {
@@ -38,15 +40,20 @@ type GoogleApi struct {
 				Text  bool `json:"text"`
 				Image bool `json:"image"`
 			} `json:"readingModes"`
-			PageCount           int    `json:"pageCount"`
-			PrintType           string `json:"printType"`
-			MaturityRating      string `json:"maturityRating"`
-			AllowAnonLogging    bool   `json:"allowAnonLogging"`
-			ContentVersion      string `json:"contentVersion"`
+			PageCount           int      `json:"pageCount"`
+			PrintType           string   `json:"printType"`
+			Categories          []string `json:"categories"`
+			MaturityRating      string   `json:"maturityRating"`
+			AllowAnonLogging    bool     `json:"allowAnonLogging"`
+			ContentVersion      string   `json:"contentVersion"`
 			PanelizationSummary struct {
 				ContainsEpubBubbles  bool `json:"containsEpubBubbles"`
 				ContainsImageBubbles bool `json:"containsImageBubbles"`
 			} `json:"panelizationSummary"`
+			ImageLinks struct {
+				SmallThumbnail string `json:"smallThumbnail"`
+				Thumbnail      string `json:"thumbnail"`
+			} `json:"imageLinks"`
 			Language            string `json:"language"`
 			PreviewLink         string `json:"previewLink"`
 			InfoLink            string `json:"infoLink"`

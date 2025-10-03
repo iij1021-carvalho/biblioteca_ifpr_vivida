@@ -11,7 +11,8 @@ data class Dt_LivroReservado(
     val ISBN: String = "",
     val CODIGO_BARRA: String = "",
     val DATA_RESERVADO: String = "",
-    val DATA_DEVOLUCAO: String = ""
+    val DATA_DEVOLUCAO: String = "",
+    val CAPA: String = ""
 )
 
 data class Dt_LivroReservadoResponse(

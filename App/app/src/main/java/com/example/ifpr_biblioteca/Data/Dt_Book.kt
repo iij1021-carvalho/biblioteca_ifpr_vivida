@@ -15,7 +15,8 @@ data class Dt_Book(
     @SerialName("QUANTIDADE") var QUANTIDADE: Int = 0,
     @SerialName("DESCRICAO") var DESCRICAO: String = "",
     @SerialName("IDIOMA") var IDIOMA: String = "",
-    @SerialName("ANO") var ANO: String = ""
+    @SerialName("ANO") var ANO: String = "",
+    @SerialName("CAPA") var CAPA: String = ""
 )
 
 data class Dt_LivrosResponse(
