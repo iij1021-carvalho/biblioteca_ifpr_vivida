@@ -66,12 +66,6 @@ fun BookListScreen(navController: NavController, viewmodelinventario: viewmodel_
                             CODIGO_BARRA = codigo_barra
                         )
                     )
-                } else {
-                    viewmodelinventario.EscanearQrcode(
-                        Dt_Book(
-                            CODIGO_BARRA = codigo_barra
-                        )
-                    )
                 }
             }
         )
@@ -166,7 +160,6 @@ fun BookListScreen(navController: NavController, viewmodelinventario: viewmodel_
                                         Row(
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
-
                                             IconButton(
                                                 modifier = Modifier
                                                     .size(25.dp),

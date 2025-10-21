@@ -55,7 +55,4 @@ interface Rotas {
     @POST("efectuarentradausuario")
     suspend fun efectuarentradausuario(@Body usuario: Dt_Usuario): retrofit2.Response<Dt_UsuarioResponse>
 
-    @GET("retornatodosusuario")
-    suspend fun retornatodosusuario(): retrofit2.Response<Dt_UsuarioResponse>
-
 }

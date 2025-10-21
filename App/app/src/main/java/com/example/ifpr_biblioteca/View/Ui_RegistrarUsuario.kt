@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
@@ -126,7 +125,9 @@ fun RegistrarUsuario(navController: NavController, viewModelUsuario: ViewModelUs
                 viewModelUsuario.executarOperacao(
                     UsuarioOperacao.Novo(
                         Dt_Usuario(
-                            NOME_USUARIO = usuario, SENHA_USUARIO = senha, EMAIL_USUARIO = email
+                            NOME_USUARIO = usuario,
+                            SENHA_USUARIO = senha,
+                            EMAIL_USUARIO = email
                         )
                     )
                 )

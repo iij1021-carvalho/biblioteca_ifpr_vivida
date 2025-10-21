@@ -147,7 +147,6 @@ fun LivrosDisponiveis(livro: List<Dt_Book>, viewmodelLivro: ViewModel_Livro) {
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                 ),
                 modifier = Modifier
-                    .weight(1f)
                     .width(180.dp)
                     .padding(end = 5.dp, start = 5.dp)
                     .height(135.dp)

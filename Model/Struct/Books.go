@@ -256,21 +256,14 @@ func (book Books_Paginacao) RetornaLivrosPaginacao() ([]Books, error) {
 	}
 
 	var resultado, erro = db.Query(
-		`WITH livros_unicos AS (
-    			SELECT *,
-					   ROW_NUMBER() OVER (PARTITION BY ISBN ORDER BY ID_BOOK ASC) AS rn
-				  FROM BOOK
-				 WHERE ID_BOOK > ?
-			)
-			SELECT ISBN,
-			       ID_BOOK,
-				   CODIGO_BARRA,
-				   AUTOR,
-				   TITULO
-			  FROM livros_unicos
-			 WHERE rn = 1
-			ORDER BY ID_BOOK
-			LIMIT ?`, book.INICIAL, book.FINAL)
+		` SELECT ID_BOOK,
+                 CODIGO_BARRA,
+                 AUTOR,
+                 TITULO,
+                 ISBN
+			FROM BOOK 
+           WHERE ID_BOOK > ?
+		   LIMIT ?`, book.INICIAL, book.FINAL)
 
 	if erro != nil {
 		return book_, erro
@@ -279,7 +272,7 @@ func (book Books_Paginacao) RetornaLivrosPaginacao() ([]Books, error) {
 	defer resultado.Close()
 
 	for resultado.Next() {
-		erro = resultado.Scan(&books.ISBN, &books.ID_BOOK, &books.CODIGO_BARRA, &books.AUTOR, &books.TITULO)
+		erro = resultado.Scan(&books.ID_BOOK, &books.CODIGO_BARRA, &books.AUTOR, &books.TITULO, &books.ISBN)
 		if erro != nil {
 			return book_, erro
 		}

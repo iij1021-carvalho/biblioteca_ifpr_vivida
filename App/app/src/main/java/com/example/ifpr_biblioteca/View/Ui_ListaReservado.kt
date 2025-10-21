@@ -72,9 +72,9 @@ fun ListaReservado(navController: NavController, viewmodelLivroreservado: ViewMo
                         Column(
                             verticalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
-                            Text(text = lista.TITULO, fontWeight = FontWeight.W400)
-                            Text(text = lista.AUTOR, fontWeight = FontWeight.W100)
-                            Text(text = lista.DATA_RESERVADO, fontWeight = FontWeight.W100)
+                            Text(text = lista.TITULO, fontWeight = FontWeight.W700)
+                            Text(text = lista.AUTOR, fontWeight = FontWeight.W300)
+                            Text(text = lista.DATA_RESERVADO, fontWeight = FontWeight.W300)
                         }
                     }
                 }
