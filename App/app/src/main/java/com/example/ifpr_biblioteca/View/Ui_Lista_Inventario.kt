@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -27,6 +28,7 @@ import com.example.ifpr_biblioteca.Model.Viewmodel.viewmodel_inventario
 @Composable
 fun ListaInventario(navController: NavController, viewmodelInventario: viewmodel_inventario) {
     val listaLivros by viewmodelInventario.livro.collectAsState()
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -121,14 +123,15 @@ fun ListaInventario(navController: NavController, viewmodelInventario: viewmodel
 
         Button(
             onClick = {
-
+                val arquivo = viewmodelInventario.gerarArquivoPergamum(listaLivros, context)
+                viewmodelInventario.enviarWhatsApp(context, arquivo)
             },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .width(200.dp)
                 .padding(16.dp)
         ) {
-            Text("Exportar")
+            Text("Gerar arquivo")
         }
     }
 }

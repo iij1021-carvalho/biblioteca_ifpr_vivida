@@ -55,27 +55,26 @@ fun BookListScreen(navController: NavController, viewmodelinventario: viewmodel_
             .fillMaxSize()
             .background(Color.White)
     ) {
-        var codigo_barra: Int by remember { mutableIntStateOf(0) }
-        val launcher = rememberLauncherForActivityResult(
-            contract = ScanContract(),
-            onResult = { result ->
-                if (result.contents != null) {
-                    codigo_barra = result.contents.replace("0", "", true).toInt()
-                    viewmodelinventario.EscanearQrcode(
-                        Dt_Book(
-                            CODIGO_BARRA = codigo_barra
-                        )
-                    )
-                } else {
-                    viewmodelinventario.EscanearQrcode(
-                        Dt_Book(
-                            CODIGO_BARRA = codigo_barra
-                        )
-                    )
-                }
-            }
-        )
-
+//        var codigo_barra: Int by remember { mutableIntStateOf(0) }
+//        val launcher = rememberLauncherForActivityResult(
+//            contract = ScanContract(),
+//            onResult = { result ->
+//                if (result.contents != null) {
+//                    codigo_barra = result.contents.replace("0", "", true).toInt()
+//                    viewmodelinventario.EscanearQrcode(
+//                        Dt_Book(
+//                            CODIGO_BARRA = codigo_barra
+//                        )
+//                    )
+//                } else {
+//                    viewmodelinventario.EscanearQrcode(
+//                        Dt_Book(
+//                            CODIGO_BARRA = codigo_barra
+//                        )
+//                    )
+//                }
+//            }
+//        )
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
@@ -107,12 +106,18 @@ fun BookListScreen(navController: NavController, viewmodelinventario: viewmodel_
                     ) {
                         IconButton(
                             onClick = {
-                                val options = ScanOptions()
-                                options.setDesiredBarcodeFormats(ScanOptions.ALL_CODE_TYPES)
-                                options.setPrompt("Escaneie o QR Code ou código de barras")
-                                options.setBeepEnabled(true)
-                                options.setOrientationLocked(false)
-                                launcher.launch(options)
+                                var codigo_barra = "315601"
+                                viewmodelinventario.EscanearQrcode(
+                                    Dt_Book(
+                                        CODIGO_BARRA = codigo_barra.toInt()
+                                    )
+                                )
+//                                val options = ScanOptions()
+//                                options.setDesiredBarcodeFormats(ScanOptions.ALL_CODE_TYPES)
+//                                options.setPrompt("Escaneie o QR Code ou código de barras")
+//                                options.setBeepEnabled(true)
+//                                options.setOrientationLocked(false)
+//                                launcher.launch(options)
                             }
                         ) {
                             Icon(
