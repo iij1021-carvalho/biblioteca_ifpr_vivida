@@ -171,7 +171,6 @@ fun BookListScreen(navController: NavController, viewmodelinventario: viewmodel_
                                         Row(
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
-
                                             IconButton(
                                                 modifier = Modifier
                                                     .size(25.dp),

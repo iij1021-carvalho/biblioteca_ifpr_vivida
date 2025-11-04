@@ -58,8 +58,12 @@ class ViewModel_Livro(private val api_rotas: Api = Api()) : ViewModel() {
             try {
                 val resposta = api_rotas.api.BuscaLivroGoogle(book)
                 if (resposta.isSuccessful) {
-                    _livro.value = resposta.body()?.data ?: emptyList()
-                    _uiState.value = LivroUiState.Sucess()
+                    if(resposta.body()?.data != null) {
+                        _livro.value = resposta.body()?.data ?: emptyList()
+                        _uiState.value = LivroUiState.Sucess()
+                    }else{
+                        _uiState.value = LivroUiState.Erro("Falha ao carregar livros")
+                    }
                 } else {
                     _uiState.value = LivroUiState.Erro("Falha ao carregar livros")
                 }
@@ -110,7 +114,6 @@ class ViewModel_Livro(private val api_rotas: Api = Api()) : ViewModel() {
     fun ResetNext() {
         _next.value = false
     }
-
 
     fun HabilitaNext() {
         _next.value = true

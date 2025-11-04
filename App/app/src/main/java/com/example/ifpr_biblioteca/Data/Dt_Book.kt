@@ -1,6 +1,5 @@
 package com.example.ifpr_biblioteca.Data
 
-import android.R
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

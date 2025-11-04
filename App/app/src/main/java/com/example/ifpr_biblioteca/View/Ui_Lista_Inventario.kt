@@ -24,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.ifpr_biblioteca.Model.Viewmodel.viewmodel_inventario
-
 @Composable
 fun ListaInventario(navController: NavController, viewmodelInventario: viewmodel_inventario) {
     val listaLivros by viewmodelInventario.livro.collectAsState()
@@ -62,7 +61,6 @@ fun ListaInventario(navController: NavController, viewmodelInventario: viewmodel
                         text = "Titulo",
                         fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily.SansSerif
-
                     )
 
                     Spacer(
