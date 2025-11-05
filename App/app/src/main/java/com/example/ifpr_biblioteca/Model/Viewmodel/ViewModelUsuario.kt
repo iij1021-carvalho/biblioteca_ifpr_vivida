@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class ViewModelUsuario(private val api_rotas: Api = Api()) : ViewModel() {
-    private val _uistate = MutableStateFlow<UsuarioUiState>(UsuarioUiState.Idle)
     private var _iduser: MutableStateFlow<Int> = MutableStateFlow(0)
+    private val _uistate = MutableStateFlow<UsuarioUiState>(UsuarioUiState.Idle)
     val uiState: StateFlow<UsuarioUiState> = _uistate
     val iduser: StateFlow<Int> = _iduser
 

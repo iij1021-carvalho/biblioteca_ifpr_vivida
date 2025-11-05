@@ -1,7 +1,5 @@
 package com.example.ifpr_biblioteca.Data
 
-import android.os.Message
-
 data class Dt_LivroReservado(
     val IDRESERVA: Int = 0,
     val IDLIVRO: Int = 0,

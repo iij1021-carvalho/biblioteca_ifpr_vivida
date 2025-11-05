@@ -105,20 +105,16 @@ class ViewModel_Livro(private val api_rotas: Api = Api()) : ViewModel() {
             }
         }
     }
-
     fun ResetUi() {
         _uiState.value = LivroUiState.Idle
         _uiState_.value = ReservadoUiState.idle
     }
-
     fun ResetNext() {
         _next.value = false
     }
-
     fun HabilitaNext() {
         _next.value = true
     }
-
     fun OperacaoCrud(reservado: Dt_LivroReservado) {
         viewModelScope.launch {
             _uiState_.value = ReservadoUiState.loading

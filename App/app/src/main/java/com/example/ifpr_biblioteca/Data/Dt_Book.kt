@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Dt_Book(
     @SerialName("ID_BOOK") val ID_BOOK: Int = 0,
-    @SerialName("CODIGO_BARRA") val CODIGO_BARRA: Int = 0,
+    @SerialName("CODIGO_BARRA") val CODIGO_BARRA: String = "",
     @SerialName("AUTOR") val AUTOR: String = "",
     @SerialName("TITULO") val TITULO: String = "",
     @SerialName("ISBN") val ISBN: String = "",

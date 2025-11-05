@@ -1,8 +1,10 @@
 package com.example.ifpr_biblioteca.View
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -28,11 +29,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -48,6 +51,7 @@ import com.journeyapps.barcodescanner.ScanOptions
 @Composable
 fun BookListScreen(navController: NavController, viewmodelinventario: viewmodel_inventario) {
     val listaLivros by viewmodelinventario.livro.collectAsState()
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -55,26 +59,28 @@ fun BookListScreen(navController: NavController, viewmodelinventario: viewmodel_
             .fillMaxSize()
             .background(Color.White)
     ) {
-//        var codigo_barra: Int by remember { mutableIntStateOf(0) }
-//        val launcher = rememberLauncherForActivityResult(
-//            contract = ScanContract(),
-//            onResult = { result ->
-//                if (result.contents != null) {
-//                    codigo_barra = result.contents.replace("0", "", true).toInt()
-//                    viewmodelinventario.EscanearQrcode(
-//                        Dt_Book(
-//                            CODIGO_BARRA = codigo_barra
-//                        )
-//                    )
-//                } else {
-//                    viewmodelinventario.EscanearQrcode(
-//                        Dt_Book(
-//                            CODIGO_BARRA = codigo_barra
-//                        )
-//                    )
-//                }
-//            }
-//        )
+
+        var codigo_barra: String by remember { mutableStateOf("") }
+        val launcher = rememberLauncherForActivityResult(
+            contract = ScanContract(),
+            onResult = { result ->
+                try {
+                    if (result.contents != null) {
+                        codigo_barra = result.contents
+                        viewmodelinventario.escanearQrcode(
+                            Dt_Book(
+                                CODIGO_BARRA = codigo_barra
+                            ), context
+                        )
+                    } else {
+                        Log.d("Erro", "Falha ao ler código")
+                    }
+                }catch (e : Exception){
+                    Log.d("Erro", "Falha ao ler código ${e.message}")
+                }
+            }
+        )
+
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
@@ -106,18 +112,16 @@ fun BookListScreen(navController: NavController, viewmodelinventario: viewmodel_
                     ) {
                         IconButton(
                             onClick = {
-                                var codigo_barra = "315601"
-                                viewmodelinventario.EscanearQrcode(
-                                    Dt_Book(
-                                        CODIGO_BARRA = codigo_barra.toInt()
-                                    )
-                                )
-//                                val options = ScanOptions()
-//                                options.setDesiredBarcodeFormats(ScanOptions.ALL_CODE_TYPES)
-//                                options.setPrompt("Escaneie o QR Code ou código de barras")
-//                                options.setBeepEnabled(true)
-//                                options.setOrientationLocked(false)
-//                                launcher.launch(options)
+                                try {
+                                    val options = ScanOptions()
+                                    options.setDesiredBarcodeFormats(ScanOptions.ALL_CODE_TYPES)
+                                    options.setPrompt("Escaneie o QR Code ou código de barras")
+                                    options.setBeepEnabled(true)
+                                    options.setOrientationLocked(false)
+                                    launcher.launch(options)
+                                } catch (e: Exception) {
+                                    Log.d("Erro","Falha ao ler código ${e.message}")
+                                }
                             }
                         ) {
                             Icon(
@@ -142,10 +146,18 @@ fun BookListScreen(navController: NavController, viewmodelinventario: viewmodel_
                     ) {
                         items(listaLivros) { book ->
                             var quantidade by remember { mutableIntStateOf(1) }
-                            quantidade = book.QUANTIDADE ?: 1
+//                            quantidade = viewmodelinventario.RetornarQuantidade(book.CODIGO_BARRA)
 
                             Card(
-                                modifier = Modifier.fillMaxWidth(),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .combinedClickable(
+                                        onClick = {
+                                        },
+                                        onLongClick = {
+                                            viewmodelinventario.deletarLivro(book)
+                                        }
+                                    ),
                                 elevation = CardDefaults.cardElevation(6.dp),
                                 shape = RoundedCornerShape(16.dp)
                             ) {
@@ -157,50 +169,50 @@ fun BookListScreen(navController: NavController, viewmodelinventario: viewmodel_
                                     )
 
                                     Text(text = "Autor: ${book.AUTOR}")
-                                    Text(text = "ISBN: ${book.ISBN}")
-
+                                    Text(text = "Isbn: ${book.ISBN}")
+                                    Text(text = "Código barra: ${book.CODIGO_BARRA.toString()}")
                                     Spacer(modifier = Modifier.height(12.dp))
 
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.SpaceBetween,
-                                        modifier = Modifier.fillMaxWidth()
-                                    ) {
-                                        Text(text = "Quantidade:", fontWeight = FontWeight.Medium)
-
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            IconButton(
-                                                modifier = Modifier
-                                                    .size(25.dp),
-                                                onClick = {
-                                                    quantidade--
-                                                    viewmodelinventario.AtualizarQuantidade(book.ID_BOOK, quantidade)
-                                                }) {
-                                                Icon(
-                                                    painter = painterResource(id = R.drawable.sinal_menos),
-                                                    contentDescription = "Diminuir"
-                                                )
-                                            }
-
-                                            Text(
-                                                text = quantidade.toString(),
-                                                style = MaterialTheme.typography.bodyLarge,
-                                                modifier = Modifier.padding(horizontal = 25.dp)
-                                            )
-
-                                            IconButton(onClick = {
-                                                quantidade++
-                                                viewmodelinventario.AtualizarQuantidade(book.ID_BOOK, quantidade)
-                                            }) {
-                                                Icon(
-                                                    painter = painterResource(id = R.drawable.sinal_mais),
-                                                    contentDescription = "Mais"
-                                                )
-                                            }
-                                        }
-                                    }
+//                                    Row(
+//                                        verticalAlignment = Alignment.CenterVertically,
+//                                        horizontalArrangement = Arrangement.SpaceBetween,
+//                                        modifier = Modifier.fillMaxWidth()
+//                                    ) {
+//                                        Text(text = "Quantidade:", fontWeight = FontWeight.Medium)
+//
+//                                        Row(
+//                                            verticalAlignment = Alignment.CenterVertically
+//                                        ) {
+//                                            IconButton(
+//                                                modifier = Modifier
+//                                                    .size(25.dp),
+//                                                onClick = {
+//                                                    quantidade--
+//                                                    viewmodelinventario.AtualizarQuantidade(book.ID_BOOK, quantidade)
+//                                                }) {
+//                                                Icon(
+//                                                    painter = painterResource(id = R.drawable.sinal_menos),
+//                                                    contentDescription = "Diminuir"
+//                                                )
+//                                            }
+//
+//                                            Text(
+//                                                text = quantidade.toString(),
+//                                                style = MaterialTheme.typography.bodyLarge,
+//                                                modifier = Modifier.padding(horizontal = 25.dp)
+//                                            )
+//
+//                                            IconButton(onClick = {
+//                                                quantidade++
+//                                                viewmodelinventario.AtualizarQuantidade(book.ID_BOOK, quantidade)
+//                                            }) {
+//                                                Icon(
+//                                                    painter = painterResource(id = R.drawable.sinal_mais),
+//                                                    contentDescription = "Mais"
+//                                                )
+//                                            }
+//                                        }
+//                                    }
                                 }
                             }
                         }

@@ -2,15 +2,15 @@ package com.example.ifpr_biblioteca.Model.Viewmodel
 
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
+import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ifpr_biblioteca.Data.Dt_Book
+import com.example.ifpr_biblioteca.Data.LivroUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -18,31 +18,27 @@ class viewmodel_inventario(private val api_rotas: Api = Api()) : ViewModel() {
     private var _livro = MutableStateFlow<List<Dt_Book>>(emptyList())
     val livro: StateFlow<List<Dt_Book>> = _livro
 
-    fun EscanearQrcode(book: Dt_Book) {
+    fun escanearQrcode(book: Dt_Book, context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = api_rotas.api.buscarlivroQrCode(book)
                 if (response.isSuccessful) {
-                    _livro.value = _livro.value + response.body()?.data!!
+                    if (response.body()?.data == null) {
+                        _livro.value = emptyList()
+                    } else {
+                        _livro.value += response.body()?.data!!
+                    }
                 } else {
                     _livro.value = emptyList()
                 }
             } catch (e: Exception) {
-                _livro.value = emptyList()
+                Log.d("Error", "Falha ao escanear o código ${e.message}")
             }
         }
     }
 
-    fun AtualizarQuantidade(idlivro: Int, qtd: Int) {
-        _livro.update { current ->
-            current.map {
-                if (it.ID_BOOK == idlivro) {
-                    it.copy(QUANTIDADE = qtd)
-                } else {
-                    it
-                }
-            }
-        }
+    fun deletarLivro(livro: Dt_Book) {
+        _livro.value = _livro.value.filter { it != livro }
     }
 
     fun gerarArquivoPergamum(listaLivros: List<Dt_Book>, context: Context): File {
@@ -50,7 +46,7 @@ class viewmodel_inventario(private val api_rotas: Api = Api()) : ViewModel() {
         val arquivo = File(context.getExternalFilesDir(null), nomeArquivo)
         arquivo.bufferedWriter(Charsets.UTF_8).use { writer ->
             listaLivros.forEach { codigo ->
-                writer.write(codigo.toString())
+                writer.write(codigo.CODIGO_BARRA.toString())
                 writer.newLine()
             }
         }
@@ -75,7 +71,11 @@ class viewmodel_inventario(private val api_rotas: Api = Api()) : ViewModel() {
         try {
             context.startActivity(intent)
         } catch (e: Exception) {
-            Toast.makeText(context, "WhatsApp não encontrado", Toast.LENGTH_SHORT).show()
+            Log.d("Error", "Falha ao enviar dados ao whatsapp ${e.message}")
         }
+    }
+
+    fun resetDados(){
+        _livro.value = emptyList()
     }
 }

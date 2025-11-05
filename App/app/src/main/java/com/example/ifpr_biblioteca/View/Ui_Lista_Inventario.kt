@@ -112,7 +112,7 @@ fun ListaInventario(navController: NavController, viewmodelInventario: viewmodel
                     Text(
                         modifier = Modifier
                             .width(20.dp),
-                        text = it.QUANTIDADE.toString(),
+                        text = "1",
                         fontFamily = FontFamily.SansSerif
                     )
                 }

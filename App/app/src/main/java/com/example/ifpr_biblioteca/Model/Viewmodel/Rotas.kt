@@ -8,7 +8,6 @@ import com.example.ifpr_biblioteca.Data.Dt_LivrosResponse
 import com.example.ifpr_biblioteca.Data.Dt_Usuario
 import com.example.ifpr_biblioteca.Data.Dt_UsuarioResponse
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 

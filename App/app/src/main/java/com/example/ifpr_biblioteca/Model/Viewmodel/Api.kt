@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class Api {
     val api: Rotas by lazy {
         Retrofit.Builder()
-            .baseUrl("http://192.168.15.234:3000")
+            .baseUrl("")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(Rotas::class.java)
