@@ -72,7 +72,8 @@ fun BookListScreen(navController: NavController, viewmodelinventario: viewmodel_
                                 CODIGO_BARRA = codigo_barra
                             ), context
                         )
-                    } else {
+                    }
+                    else {
                         Log.d("Erro", "Falha ao ler código")
                     }
                 }catch (e : Exception){

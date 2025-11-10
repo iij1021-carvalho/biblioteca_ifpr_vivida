@@ -8,7 +8,7 @@ import (
 
 type Books struct {
 	ID_BOOK      int    `json:"ID_BOOK"`
-	CODIGO_BARRA int    `json:"CODIGO_BARRA"`
+	CODIGO_BARRA string `json:"CODIGO_BARRA"`
 	AUTOR        string `json:"AUTOR"`
 	TITULO       string `json:"TITULO"`
 	ISBN         string `json:"ISBN"`
