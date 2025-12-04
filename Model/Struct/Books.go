@@ -97,9 +97,10 @@ func (book Books) RegistrarLivro() (Books, error) {
 	var transacao, erro = db.Begin()
 
 	if erro != nil {
-		transacao.Rollback()
 		return book, erro
 	}
+
+	defer transacao.Rollback()
 
 	var resultado, err = transacao.Exec(
 		`INSERT INTO BOOK (CODIGO_BARRA,AUTOR,TITULO,ISBN)
@@ -110,14 +111,12 @@ func (book Books) RegistrarLivro() (Books, error) {
 		book.ISBN)
 
 	if err != nil {
-		transacao.Rollback()
 		return book, err
 	}
 
 	var row, errro = resultado.LastInsertId()
 
 	if errro != nil {
-		transacao.Rollback()
 		return book, errro
 	}
 
@@ -135,6 +134,8 @@ func (book Books) EditarLivro() (Books, error) {
 	if errro != nil {
 		return book, errro
 	}
+
+	defer transacao.Rollback()
 
 	var resultado, erro = transacao.Exec(
 		`UPDATE BOOK 
@@ -174,6 +175,8 @@ func (book Books) DeletarLivro() (Books, error) {
 		return book, err
 	}
 
+	defer transacao.Rollback()
+
 	_, erro := transacao.Exec(`DELETE FROM BOOK WHERE ID_BOOK = ?`, book.ID_BOOK)
 
 	if erro != nil {
@@ -197,6 +200,8 @@ func (book Books) BuscaLivroCodigo() ([]Books, error) {
 	if erro != nil {
 		return book_, erro
 	}
+
+	defer resultado.Close()
 
 	for resultado.Next() {
 		var errr = resultado.Scan(
@@ -232,6 +237,8 @@ func (book Books) BuscaLivroTitulo() ([]Books, error) {
 	if erro != nil {
 		return book_, erro
 	}
+
+	defer resultado.Close()
 
 	for resultado.Next() {
 		var errr = resultado.Scan(&book.ID_BOOK, &book.CODIGO_BARRA, &book.AUTOR, &book.TITULO, &book.ISBN)

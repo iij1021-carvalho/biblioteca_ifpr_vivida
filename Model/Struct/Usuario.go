@@ -31,6 +31,8 @@ func (usuario Usuario) EfectuarEntradaUsuario() ([]Usuario, error) {
 		return nil, erro
 	}
 
+	defer resultado.Close()
+
 	for resultado.Next() {
 		erro = resultado.Scan(
 			&usuario.ID_USUARIO,
@@ -57,9 +59,10 @@ func (usuario Usuario) RegistrarUsuario() (Usuario, error) {
 	var transacao, err = db.Begin()
 
 	if err != nil {
-		transacao.Rollback()
 		return usuario, err
 	}
+
+	defer transacao.Rollback()
 
 	var _, erro = transacao.Exec(`
 	 	INSERT INTO USUARIO (NOME_USUARIO,
@@ -71,7 +74,6 @@ func (usuario Usuario) RegistrarUsuario() (Usuario, error) {
 		usuario.EMAIL_USUARIO)
 
 	if erro != nil {
-		transacao.Rollback()
 		return usuario, erro
 	}
 
@@ -84,9 +86,10 @@ func (usuario Usuario) EditarUsuario() (Usuario, error) {
 	var transacao, err = db.Begin()
 
 	if err != nil {
-		transacao.Rollback()
 		return usuario, err
 	}
+
+	defer transacao.Rollback()
 
 	var _, erro = transacao.Exec(`
 	 	UPDATE USUARIO SET NOME_USUARIO = ?,
@@ -99,7 +102,6 @@ func (usuario Usuario) EditarUsuario() (Usuario, error) {
 		usuario.ID_USUARIO)
 
 	if erro != nil {
-		transacao.Rollback()
 		return usuario, erro
 	}
 
@@ -112,9 +114,10 @@ func (usuario Usuario) ExcluirUsuario() (Usuario, error) {
 	var transacao, err = db.Begin()
 
 	if err != nil {
-		transacao.Rollback()
 		return usuario, err
 	}
+
+	defer transacao.Rollback()
 
 	var _, erro = transacao.Exec(`
 		DELETE FROM USUARIO 
@@ -122,7 +125,6 @@ func (usuario Usuario) ExcluirUsuario() (Usuario, error) {
 		usuario.ID_USUARIO)
 
 	if erro != nil {
-		transacao.Rollback()
 		return usuario, erro
 	}
 
@@ -144,6 +146,8 @@ func (usuario Usuario) RetornaTodosUsuarios() ([]Usuario, error) {
 	if erro != nil {
 		return nil, erro
 	}
+
+	defer resultado.Close()
 
 	for resultado.Next() {
 		var erro = resultado.Scan(

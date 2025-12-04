@@ -39,6 +39,8 @@ func (reservado Livro_Reservado) ListaLivroReservado() ([]Livro_Reservado, error
 		return livro_reservado_, erro
 	}
 
+	defer resultado.Close()
+
 	for resultado.Next() {
 		var erro = resultado.Scan(
 			&reservado.IDRESERVA,
@@ -65,20 +67,19 @@ func (reservado Livro_Reservado) RegistrarReserva() error {
 	var transacao, erro = db.Begin()
 
 	if erro != nil {
-		transacao.Rollback()
 		return erro
 	}
 
+	defer transacao.Rollback()
+
 	var _, err = transacao.Exec(`
-		INSERT INTO LIVRO_RESERVADO(IDLIVRO,IDUSUARIO,DATA_RESERVADO,DATA_DEVOLUCAO) 
-					VALUES(?,?,?,?)`,
+		INSERT INTO LIVRO_RESERVADO(IDLIVRO,IDUSUARIO,DATA_RESERVADO,DATA_DEVOLUCAO) VALUES(?,?,?,?)`,
 		reservado.IDLIVRO,
 		reservado.IDUSUARIO,
 		reservado.DATA_RESERVADO,
 		reservado.DATA_DEVOLUCAO)
 
 	if err != nil {
-		transacao.Rollback()
 		return err
 	}
 
@@ -91,9 +92,10 @@ func (reservado Livro_Reservado) EditarReserva() error {
 	var transacao, erro = db.Begin()
 
 	if erro != nil {
-		transacao.Rollback()
 		return erro
 	}
+
+	defer transacao.Rollback()
 
 	var _, err = transacao.Exec(`
 		UPDATE LIVRO_RESERVADO 
@@ -109,7 +111,6 @@ func (reservado Livro_Reservado) EditarReserva() error {
 		reservado.IDRESERVA)
 
 	if err != nil {
-		transacao.Rollback()
 		return err
 	}
 
